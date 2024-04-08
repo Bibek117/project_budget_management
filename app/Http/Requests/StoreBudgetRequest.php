@@ -25,7 +25,7 @@ class StoreBudgetRequest extends FormRequest
             'timeline_id' => 'required',
             'budgets' => 'required|array',
             'budgets.*.name' => 'required|string',
-            'budgets.*.amount' => 'required|numeric|min:1000',
+            'budgets.*.amount' => 'required|numeric',
         ];
     }
 }

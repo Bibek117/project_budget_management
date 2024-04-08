@@ -50,8 +50,25 @@ class TimelineController extends Controller
      */
     public function store(StoreTimelineRequest $request)
     {
-            $result = $this->timelineRepo->create($request->validated());
-            return redirect()->route('project.index')->withSuccess("Timeline created");
+        // dd($request);
+        $project_id = $request->project_id;
+        $timelineData = [];
+
+        foreach ($request->timelines as $timeline) {
+            $timelineData[] = [
+                'project_id' => $project_id,
+                'title' => $timeline['title'],
+                'start_date' => $timeline['start_date'],
+                'end_date' => $timeline['end_date']
+            ];
+        }
+
+        Timeline::insert($timelineData);
+
+        if ($request->ajax()) {
+            return response()->json(['message' => 'Timelines created successfully', 'success' => true]);
+        }
+        return redirect()->route('project.index')->withSuccess("Timeline created");
     }
 
     /**
@@ -76,6 +93,10 @@ class TimelineController extends Controller
     {
        
             $result = $this->timelineRepo->updateById($id, $request->validated());
+
+            if($request->ajax()){
+                return response()->json(['message'=>'Updated', 'success'=>true]);
+            }
             return redirect()->route('project.index')->withSuccess('Timeline updated successfully');
     }
 

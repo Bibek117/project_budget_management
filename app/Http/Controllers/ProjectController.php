@@ -31,6 +31,7 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $req)
     {
+        
         $result = $this->projectRepo->create($req->validated());
         return redirect()->route('project.index')->withSuccess('Project created successfully');
     }

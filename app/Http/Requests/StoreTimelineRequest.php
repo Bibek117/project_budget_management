@@ -23,9 +23,10 @@ class StoreTimelineRequest extends FormRequest
     {
         return [
             'project_id'=>'required',
-            'title'=>'required|string',
-            'start_date'=>'required|date',
-            'end_date'=>'required|date'
+            'timelines'=>'required|array',
+            'timelines.*.title'=>'required|string',
+            'timelines.*.start_date'=>'required|date',
+            'timelines.*.end_date'=>'required|date'
         ];
     }
 }

@@ -12,6 +12,8 @@
          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
      {{-- icons --}}
      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
 
      {{-- fonts --}}
    <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,6 +27,7 @@
 
 
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+       <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
  </head>
  <!-- ... --->
 

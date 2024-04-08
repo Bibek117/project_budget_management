@@ -9,7 +9,7 @@
     @if (session('success'))
         <p class="text-success">{{ session('success') }}</p>
     @endif
-    <table class="table">
+    <table class="table" id="index_table">
         <thead class="thead-dark">
             <tr>
                 <th scope="col">#</th>
@@ -48,6 +48,15 @@
             @endforelse
         </tbody>
     </table>
+
+    {{-- @push('other-scripts')
+
+    <script>
+        $(document).ready(function(){
+            $('#index_table').DataTable();
+        })
+    </script>
+    @endpush --}}
     {{-- {{$users->links()}} --}}
 @endsection
 

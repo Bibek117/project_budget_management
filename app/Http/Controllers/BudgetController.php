@@ -48,6 +48,7 @@ class BudgetController extends Controller
      */
     public function store(StoreBudgetRequest $request)
     {
+        // dd($request);
         $timeline_id = $request->timeline_id;
         $budgetsData = [];
 
@@ -63,6 +64,10 @@ class BudgetController extends Controller
             Budget::create($budgetsData[0]);
         } else {
             Budget::insert($budgetsData);
+        }
+
+        if($request->ajax()){
+            return response()->json(['message'=>'Budgtes created successfully','success'=>true]);
         }
 
         return redirect()->route('project.index')->with('success', 'Budgets created successfully.');
@@ -95,6 +100,10 @@ class BudgetController extends Controller
         ]);
         $project = Budget::find($id)->timeline->project;
         $result = $this->budgetRepo->updateById($id, $validatedInput);
+
+        if($request->ajax()){
+            return response()->json(['message'=>'Budget updated','success'=>true]);     
+         }
         return redirect()->route('project.show',$project->id)->withSuccess('Budget updated successfully');
     }
 
@@ -105,6 +114,9 @@ class BudgetController extends Controller
     {
           
             $result = $this->budgetRepo->deleteById($id);
+            if($req->ajax()){
+                return response()->json(['message'=>'deleted','success'=>true]);
+            }
             return redirect()->route('project.show',$req['project_id'])->withSuccess("Budget deleted successfully");
     }
 }

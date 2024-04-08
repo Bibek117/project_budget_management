@@ -24,15 +24,15 @@
     </div>
   <div class="form-group">
     <label for="title">Timeline Title</label>
-    <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" value="{{old('title')}}">
+    <input type="text" class="form-control" id="title" name="timelines[0][title]" placeholder="Enter title" value="{{old('timelines.0.title')}}">
   </div>
    <div class="form-group">
     <label for="date">Start Date</label>
-   <input type="date" min={{date('Y-m-d')}} id="date" name="start_date" class="form-control">
+   <input type="date" min={{date('Y-m-d')}} id="date" name="timelines[0][start_date]" value="{{old('timelines.0.start_date')}}" class="form-control">
   </div>
   <div class="form-group">
     <label for="date">End Date</label>
-   <input type="date"  min={{date('Y-m-d')}} id="date" name="end_date" class="form-control">
+   <input type="date"  min={{date('Y-m-d')}} id="date" name="timelines[0][end_date]" class="form-control" value="{{old('timelines.0.end_date')}}">
   </div>
   <button type="submit" class="btn btn-primary">Create Timeline</button>
 </form>
