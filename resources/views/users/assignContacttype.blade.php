@@ -23,7 +23,7 @@
         @endforelse
     </div>
  </div>
-        <form action="{{ route('contact.store') }}" method="post">
+        <form action="{{ route('user.assign.ctype.store') }}" method="post">
             @csrf
             <input type="hidden" name="user_id" value="{{$user->id}}">
             <div class="form-group">

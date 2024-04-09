@@ -17,7 +17,7 @@
         <p>User email : {{$user->email}}</p>
     </div>
  </div>
-        <form action="{{ route('assign.project.user') }}" method="post">
+        <form action="{{ route('user.assign.project.store') }}" method="post">
             @csrf
             <input type="hidden" name="user_id" value="{{$user->id}}">
             <div class="form-group">

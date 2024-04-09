@@ -16,7 +16,7 @@
         <p>Project title : {{$project->title}}</p>
     </div>
  </div>
-        <form action="{{ route('assign.user.project') }}" method="post">
+        <form action="{{ route('project.assign.user.store') }}" method="post">
             @csrf
             <input type="hidden" name="project_id" value="{{$project->id}}">
             <div class="form-group">

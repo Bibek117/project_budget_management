@@ -24,16 +24,26 @@
                         <form action={{ route('user.destroy', $user->id) }} method="post">
                             @csrf
                             @method('DELETE')
-                            <a href={{ route('contact.create', $user->id) }}
+                            @can('assign-contact')  
+                            <a href={{ route('user.assign.ctype.create', $user->id) }}
                                 class="font-medium text-green-600  hover:underline">Assign Contact Type</a> | 
-                             <a href={{ route('assign.project.create', $user->id) }}
+                            @endcan
+                            @can('assign-project-to-user')  
+                                <a href={{ route('user.assign.project.create', $user->id) }}
                                 class="font-medium text-green-600  hover:underline">Assign Project</a> | 
+                             @endcan
+                           
                             <a href={{ route('user.show', $user->id) }}
                                 class="font-medium text-yellow-600  hover:underline">Show</a>
 
-                            | <a href={{ route('user.edit', $user->id) }}
+                            @can('edit-user')
+                                 | <a href={{ route('user.edit', $user->id) }}
                                 class="font-medium text-blue-600  hover:underline">Edit</a>
-                            | <button type="submit" class="font-medium text-red-600  hover:underline">Delete</button>
+                            @endcan
+                                @can('delete-user')
+                                     | <button type="submit" class="font-medium text-red-600  hover:underline">Delete</button>
+                                @endcan
+                           
                         </form>
                     </td>
                 </tr>

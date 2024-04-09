@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Contact;
+use App\Models\Project;
+use App\Models\Contacttype;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Repostories\UserRepository;
-use App\Http\Requests\StoreUserRequest;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\StoreUserRequest;
 
 class UserController extends Controller
 {
@@ -16,6 +20,10 @@ class UserController extends Controller
     public function __construct(UserRepository $obj)
     {
         $this->userRepo = $obj;
+        $this->middleware('permission:delete-user|register-user',['only'=>['index','show']]);
+        $this->middleware('permission:register-user',['only'=>['create','register']]);
+        $this->middleware('permission:assign-project-to-user',['only'=>['assignProjectToUserForm', 'assignProjectToUser']]);
+        $this->middleware('permission:assign-contact',['only'=>['assignContactTypeToUserForm', 'assignContactTypeToUser']]);
     }
     //get all users
     public function index()
@@ -34,7 +42,7 @@ class UserController extends Controller
 
     //user edit
     public function edit(String $id){
-        $user = User::find($id);
+        $user = $this->userRepo->getById($id);
         return view('users.update',['user'=>$user]);
     }
 
@@ -46,7 +54,7 @@ class UserController extends Controller
             'phone'=>'required'
         ]);
 
-        $user = User::find($id);
+        $user = $this->userRepo->getById($id);
         $user->update($validateInput);
         return redirect()->route('user.index')->withSuccess('User updated successfully');
     }
@@ -65,6 +73,8 @@ class UserController extends Controller
     {
         return view('auth.login');
     }
+
+
     //login
     public function authenticate(Request $request)
     {
@@ -92,8 +102,6 @@ class UserController extends Controller
         return redirect()->route('login');
     }
 
-    //update TODO
-    //login
 
     //getById
     public function show(String $id)
@@ -112,5 +120,60 @@ class UserController extends Controller
     {
         $res = $this->userRepo->deleteById($id);
         return redirect()->back()->withSuccess("User deleted successfully");
+    }
+
+
+
+    //assign project/s to user
+
+    public function assignProjectToUserForm(String $id)
+    {
+        $asssignedProjects = DB::table('project_user')->where('user_id', $id)->pluck('project_id')->toArray();
+        $user = $this->userRepo->getById($id);
+        return view('users.assignProject', ['user' => $user, 'projects' => Project::without(['timeline'])->get(), 'assignedProjects' => $asssignedProjects]);
+    }
+
+
+     //assign projects to user
+    public function assignProjectToUser(Request $request)
+    {
+        $validateReq = $request->validate([
+            'user_id' => 'required',
+            'project_id' => 'required|array'
+        ]);
+        $user = $this->userRepo->getById($validateReq['user_id']);
+        $user->projects()->sync($validateReq['project_id']);
+        return redirect()->route('user.index')->withSuccess("Projects assigned to user successfully");
+    }
+
+
+    //assign contact type to user 
+    public function assignContactTypeToUserForm(String $id)
+    {
+        $assignedContatcs = DB::table('contacts')->where('user_id', $id)->pluck('contacttype_id')->toArray();
+        $user = $this->userRepo->getById($id);
+        return view('users.assignContacttype', ['user' => $user, 'assignedContacts' => $assignedContatcs, 'contacttypes' => Contacttype::get()]);
+    }
+
+    //assign contact type to user ->store
+    public function assignContactTypeToUser(Request $request)
+    {
+        $validatedRequest = $request->validate([
+            'user_id' => 'required',
+            'contacttype_id' => 'required|array'
+        ]);
+        $data = [];
+        foreach ($validatedRequest['contacttype_id'] as $contacttypeId) {
+            $data[] = [
+                'user_id' => $validatedRequest['user_id'],
+                'contacttype_id' => $contacttypeId,
+            ];
+        }
+        if (count($data) == 1) {
+            Contact::create($data[0]);
+        } else {
+            Contact::insert($data);
+        }
+        return redirect()->route('user.index')->withSuccess("Contact Types assigned successfully");
     }
 }

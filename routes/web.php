@@ -5,10 +5,8 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TimelineController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
-use App\Http\Controllers\RelationController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ContacttypeController;
-use App\Http\Controllers\ContactController;
 use App\Http\Controllers\TransactionController;
 
 /*
@@ -34,7 +32,7 @@ Route::get('/', function () {
 Route::resources(['roles' => RoleController::class]);
 
 Route::get('/assign-role', [RoleController::class, 'assign'])->name('role.assign');
-Route::get('/edit-assigned-role', [RoleController::class, 'editAddAssignedRole'])->name('role.editAssign');
+Route::get('/edit-assigned-role/{id}', [RoleController::class, 'editAddAssignedRole'])->name('role.editAssign');
 Route::post('/edit-assigned-role', [RoleController::class, 'updateAssignedRoles'])->name('role.updateAssign');
 
 
@@ -50,6 +48,11 @@ Route::controller(UserController::class)->prefix('users')->group(function () {
     Route::put('/{id}', 'update')->name('user.update');
     Route::get('/{id}/edit', 'edit')->name('user.edit');
     Route::delete('/{id}', 'destroy')->name('user.destroy');
+    Route::get('/assign-project-user/{id}', 'assignProjectToUserForm')->name('user.assign.project.create');
+    Route::post('/assign-project-user', 'assignProjectToUser')->name('user.assign.project.store');
+
+    Route::get('/assign-contacttype-user/{id}', 'assignContactTypeToUserForm')->name('user.assign.ctype.create');
+    Route::post('/assign-contacttype-user', 'assignContactTypeToUser')->name('user.assign.ctype.store');
 });
 
 
@@ -64,6 +67,8 @@ Route::controller(ProjectController::class)->prefix('projects')->group(function 
     Route::delete('/{id}', 'destroy')->name('project.destroy');
     Route::get('/{id}/edit', 'edit')->name('project.edit');
     Route::get('/ajaxSingleProject/{id}', 'getSingleAjax')->name('project.ajax');
+    Route::get('/assign-user-project/{id}', 'assignUserToProjectForm')->name('project.assign.user.create');
+    Route::post('/assign-user-project', 'assignUserToProject')->name('project.assign.user.store');
 });
 
 
@@ -92,15 +97,6 @@ Route::controller(BudgetController::class)->prefix('budgets')->group(function ()
     Route::delete('/{id}', 'destroy')->name('budget.destroy');
 });
 
-//many to many relation controller
-Route::controller(RelationController::class)->group(function () {
-    Route::post('/assign-project-user', 'assignProjectUser')->name('assign.project.user');
-    Route::get('/assign-project-user/{id}', 'assignProjectUserForm')->name('assign.project.create');
-    Route::post('/assign-user-project','assignUserProject')->name('assign.user.project');
-    Route::get('/assign-user-project/{id}', 'assignUserProjectForm')->name('assign.user.create');
-    Route::post('/dettach-user-project', 'detachProjectUser');
-});
-
 //contact types
 Route::controller(ContacttypeController::class)->prefix('contacttypes')->group(function () {
     Route::get('/', 'index')->name('contacttype.index');
@@ -112,15 +108,6 @@ Route::controller(ContacttypeController::class)->prefix('contacttypes')->group(f
     Route::delete('/{id}', 'destroy')->name('contacttype.destroy');
 });
 
-
-//contacts
-Route::controller(ContactController::class)->group(function () {
-    Route::get('/create-contact/{id}','create')->name('contact.create');
-    Route::post('/create-contact', 'createContact')->name('contact.store');
-    Route::get('/contact/ajaxSingleUsers/{id}', 'getSingleAjax')->name('contact.ajax');
-});
-
-
 //transactions
 Route::controller(TransactionController::class)->prefix('transactions')->group(function () {
     Route::get('/', 'index')->name('transaction.index');
@@ -129,4 +116,8 @@ Route::controller(TransactionController::class)->prefix('transactions')->group(f
     Route::get('/{id}', 'show')->name('transaction.show');
     Route::put('/{id}', 'update')->name('transaction.update');
     Route::delete('/{id}', 'destroy')->name('transaction.destroy');
+
+    //ajax requests
+    Route::get('/ajaxUsers/{id}', 'getUsersAjax')->name('contact.ajax');
+ 
 });

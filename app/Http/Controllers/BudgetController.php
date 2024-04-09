@@ -14,6 +14,11 @@ class BudgetController extends Controller
     public function __construct(BudgetRepository $budgetRepo)
     {
         $this->budgetRepo = $budgetRepo;
+        $this->middleware('auth');
+        $this->middleware('permission:create-budget|edit-budget|delete_budget', ['only' => ['index', 'show']]);
+        $this->middleware('permission:create-budget', ['only' => 'store', 'createBudget']);
+        $this->middleware('permission:edit-budget', ['only' => 'edit', 'update']);
+        $this->middleware('permission:delete-budget', ['only' => ['destroy']]);
     }
 
     /**

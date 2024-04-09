@@ -26,7 +26,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return view('role.show', ['roles' => Role::orderBy('id')->paginate(5)]);
+        return view('role.show', ['roles' => Role::where('name','!=','Super Admin')->orderBy('id')->paginate(5)]);
     }
 
     /**
@@ -62,6 +62,9 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
+        if($role->name == "Super Admin"){
+            return abort(403);
+        }
         $permissions = DB::select('select permissions.name from permissions inner join role_has_permissions on permissions.id = role_has_permissions.permission_id where role_has_permissions.role_id = ?', [$role->id]);
         return view('role.singleRole', ['role' => $role, 'permissions' => $permissions]);
     }
@@ -71,6 +74,9 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
+        if ($role->name == "Super Admin") {
+            return abort(403);
+        }
         $roleAssignedPermissions =  DB::table('role_has_permissions')->where('role_id', $role->id)->pluck('permission_id')->all();
         return view('role.update', ['role' => $role, 'permissions' => Permission::get(), 'roleAssignedPermissions' => $roleAssignedPermissions]);
     }
@@ -80,6 +86,9 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
+        if ($role->name == "Super Admin") {
+            return abort(403);
+        }
         $validatedData = $request->validate([
             'name' => 'required|string',
             'permissions' => 'required'
@@ -109,20 +118,30 @@ class RoleController extends Controller
      FROM users
      INNER JOIN model_has_roles rel ON rel.model_id = users.id
      INNER JOIN roles ON roles.id = rel.role_id
+     WHERE roles.name != "Super Admin"
      GROUP BY users.username,users.id;');
-        return view('role.assignRole', ['users' => User::all(), 'roles' => Role::all(), 'userAssociatedRoles' => $userAssociatedRoles]);
+        return view('role.assignRole', [ 'userAssociatedRoles' => $userAssociatedRoles]);
     }
 
     //assign role or edit form
 
-    public function editAddAssignedRole(User $user){
-        $assignedRoles = DB::table('model_has_roles')->where('model_id',$user->id)->pluck('role_id')->all();
-        return view('role.updateAssignedRole',['assignedRoles'=>$assignedRoles,'roles'=>Role::get(),'user'=>$user]);
+    public function editAddAssignedRole($id){
+        $user = User::find($id);
+        $assignedRoles = DB::table('model_has_roles')->where('model_id',$user->id)->pluck('role_id')->toArray();
+        return view('role.updateAssignedRole',['assignedRoles'=>$assignedRoles,'roles'=>Role::where('name','!=','Super Admin')->get(),'user'=>$user]);
     }
 
     //update assigned roles to db
-    public function updateAssignedRoles(){
+    public function updateAssignedRoles(Request $request){
+        $validatedData = $request->validate([
+            'user_id'=>'required',
+            'roles'=>'required|array'
+        ]);
 
+        $user = User::find($validatedData['user_id']);
+        $selectedRoleNames = DB::table('roles')->whereIn('id',$validatedData['roles'])->pluck('name');
+        $user->syncRoles($selectedRoleNames);
+        return redirect()->route('role.assign')->withSuccess("Roles assigned");
     }
 
 }

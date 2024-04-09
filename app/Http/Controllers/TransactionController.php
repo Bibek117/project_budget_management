@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Record;
+use App\Models\Contact;
 use App\Models\Project;
 use App\Models\Contacttype;
 use App\Models\Transaction;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Repostories\TransactionRepository;
 use App\Http\Requests\StoreTransactionRequest;
-use App\Models\Contact;
 
 class TransactionController extends Controller
 {
@@ -18,6 +18,11 @@ class TransactionController extends Controller
 
     public function __construct(TransactionRepository $transactionRepo){
         $this->transactionRepo = $transactionRepo;
+        $this->middleware('auth');
+        $this->middleware('permission:create-transaction|edit-transaction|delete-transaction',['only'=>['show','index']]);
+        $this->middleware('permission:create-transaction',['only'=>['store','create']]);
+        $this->middleware('permission:edit-transaction',['only'=>['update','edit']]);
+        $this->middleware('permission:delete-transaction',['only'=>['destroy']]);
     }
 
     /**
@@ -123,4 +128,13 @@ class TransactionController extends Controller
             return response()->json(['result' => $e, 'success' => false]);
         }
     }
+
+
+    //get users given contact type
+    public function getUsersAjax(string $id)
+    {
+        $result = DB::select('select users.id,users.username from users inner join contacts on users.id = contacts.user_id where contacts.contacttype_id = ?', [$id]);
+        return response()->json(['users' => $result]);
+    }
+
 }

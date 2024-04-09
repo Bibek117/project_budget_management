@@ -8,11 +8,17 @@ use App\Repostories\RecordRepository;
 class RecordController extends Controller
 {
     private $recordRepo;
-    //constructer
+   
     public function __construct(RecordRepository $recordRepository){
         $this->recordRepo = $recordRepository;
     }
 
+
+    //index
+    public function index(){
+        $result = $this->recordRepo->getAll();
+        return response()->json(['result'=>$result,'success'=>true]);
+    }
 
     public function createRecord(Request $request){
         $validatedRequest = $request->validate([

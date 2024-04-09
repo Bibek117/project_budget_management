@@ -18,9 +18,27 @@ class PermissionSeeder extends Seeder
             'edit-role',
             'delete-role',
             'assign-role',
-            'create-user',
+            'register-user',
             'edit-user',
             'delete-user',
+            'assign-project-to-user',
+            'assign-contact',
+            'create-transaction',
+            'edit-transaction',
+            'delete-transaction',
+            'create-timeline',
+            'edit-timeline',
+            'delete-timeline',
+            'assign-user-to-project',
+            'create-project',
+            'edit-project',
+            'delete_project',
+            'create-contacttype',
+            'edit-contacttype',
+            'delete-contacttype',
+            'create-budget',
+            'edit-budget',
+            'delete_budget'
         ];
 
         foreach ($permissions as $permission) {

@@ -247,7 +247,7 @@
                     let contacttypeId = $(this).val();
                     let usersDropdown = $(this).closest('tr').find('.users');
                     $.ajax({
-                        url: `/contact/ajaxSingleUsers/${contacttypeId}`,
+                        url: `/transactions/ajaxUsers/${contacttypeId}`,
                         type: 'GET',
                         success: function(response) {
                             usersDropdown.empty();

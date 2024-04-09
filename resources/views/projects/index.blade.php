@@ -30,14 +30,22 @@
                         <form action={{ route('project.destroy', $project->id) }} method="post">
                             @csrf
                             @method('DELETE')
-                            <a href={{ route('assign.user.create', $project->id) }}
+                            @can('assign-user-to-project') 
+                            <a href={{ route('project.assign.user.create', $project->id) }}
                                 class="font-medium text-green-600  hover:underline">Assign Users</a> |
+                            @endcan
+                           
                             <a href={{ route('project.show', $project->id) }}
                                 class="font-medium text-yellow-600  hover:underline">Show</a>
-
-                            | <a href={{ route('project.edit', $project->id) }}
+                                @can('edit-project') 
+                                | <a href={{ route('project.edit', $project->id) }}
                                 class="font-medium text-blue-600  hover:underline">Edit</a>
-                            | <button type="submit" class="font-medium text-red-600  hover:underline">Delete</button>
+                                @endcan
+                           
+                                @can('delete-project')
+                                 | <button type="submit" class="font-medium text-red-600  hover:underline">Delete</button>
+                                @endcan
+                           
                         </form>
                     </td>
                 </tr>

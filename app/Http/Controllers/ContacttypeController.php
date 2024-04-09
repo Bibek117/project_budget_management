@@ -12,6 +12,11 @@ class ContacttypeController extends Controller
     private $contacttypeRepo;
     public function __construct(ContacttypeRepository $contacttypeRepo){
         $this->contacttypeRepo = $contacttypeRepo;
+        $this->middleware('auth');
+        $this->middleware('permission:create-contacttype|edit-contacttype|delete-contacttype', ['only' => ['show', 'index']]);
+        $this->middleware('permission:create-contacttype', ['only' => ['store', 'create']]);
+        $this->middleware('permission:edit-contacttype', ['only' => ['update', 'edit']]);
+        $this->middleware('permission:delete-contacttype', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.

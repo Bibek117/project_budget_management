@@ -14,12 +14,15 @@
             <p>Project Desc : {{ $project->desc }}</p>
             <p> Project Start Date : {{ $project->start_date }}</p>
             <p> Project End Date : {{ $project->end_date }}</p>
-            <button id="create-timeline" class="btn btn-success">Create Timeline</button>
+            @can('create-timeline')
+                  <button id="create-timeline" class="btn btn-success">Create Timeline</button>
+            @endcan         
         </div>
     </div>
 
     {{-- form for timeline --}}
-    <div id="create-timeline-form" class="card d-none bg-light">
+    @can('create-timeline')
+          <div id="create-timeline-form" class="card d-none bg-light">
         <div class="card-header">
             <h5 class="inline-block">Create Timeline</h5>
             <button type="button" class="close text-danger" id="close-timeline">
@@ -74,6 +77,8 @@
             </form>
         </div>
     </div>
+    @endcan
+  
 
 
     {{-- timelines --}}
@@ -99,12 +104,19 @@
                         <form action={{ route('timeline.destroy', $timeline->id) }} method="post">
                             @csrf
                             @method('DELETE')
-                            <button data-id="{{ $timeline->id }}" data-title= "{{ $timeline->title }}"
+                            @can('create-budget')
+                                   <button data-id="{{ $timeline->id }}" data-title= "{{ $timeline->title }}"
                                 class="btn btn-success create-budget">Create Budget</button> |
+                            @endcan
                             <button type="button" class="btn btn-warning show-timeline" data-id="{{ $timeline->id }}">Show
                                 Budgets</button>
-                            | <a href={{ route('timeline.edit', $timeline->id) }} class="btn btn-primary">Edit</a>
-                            | <button type="submit" class="btn btn-danger">Delete</button>
+                                @can('edit-timeline') 
+                                | <a href={{ route('timeline.edit', $timeline->id) }} class="btn btn-primary">Edit</a>
+                                @endcan
+                           @can('delete-timeline')
+                                | <button type="submit" class="btn btn-danger">Delete</button>
+                           @endcan
+                           
                         </form>
                     </td>
                 </tr>
@@ -117,6 +129,7 @@
     </table>
 
     {{-- form for budget --}}
+    @can('create-budget') 
     <div id="create-budget-form" class="card d-none bg-light">
         <div class="card-header">
             <h5 class="inline-block" id="create-budget-title"></h5>
@@ -162,6 +175,8 @@
             </form>
         </div>
     </div>
+    @endcan
+   
 
     {{-- dsiplay budgets --}}
     <div id="display-budget" class="d-none">
@@ -196,21 +211,19 @@
                                             <td contenteditable="false" id="amount_{{ $singleBudget->id }}">
                                                 {{ $singleBudget->amount }}</td>
                                             <td>
-                                                <button onclick="editBudget({{ $singleBudget->id }})"
+                                                @can('edit-budget')
+                                                    <button onclick="editBudget({{ $singleBudget->id }})"
                                                         id="edit_{{ $singleBudget->id }}"
                                                         class="btn btn-primary">Edit</button>
-                                                   
+                                                @endcan
+                                                @can('edit-budget')
                                                     <button  onclick="saveBudget({{ $singleBudget->id }})"
                                                         id="save_{{ $singleBudget->id }}"
                                                         class="btn btn-success d-none">Save</button> 
-                                                {{-- <form id="form_{{ $singleBudget->id }}"
-                                                    action="{{ route('budget.destroy', $singleBudget->id) }}"
-                                                    method="post">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <input type="hidden" name="project_id" value="{{ $project->id }}"> --}}
-                                                    <button onclick="deleteBudget({{$singleBudget->id}})" class="btn btn-danger">Delete</button>
-                                                {{-- </form> --}}
+                                                @endcan
+                                                   @can('delete-budget')
+                                                       <button onclick="deleteBudget({{$singleBudget->id}})" class="btn btn-danger">Delete</button>
+                                                   @endcan             
                                             </td>
                                         </tr>
                                     @empty

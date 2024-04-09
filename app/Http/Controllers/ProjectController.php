@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Repostories\ProjectRepository;
 use App\Http\Requests\StoreProjectRequest;
-use App\Models\Project;
 
 
 class ProjectController extends Controller
@@ -14,6 +16,13 @@ class ProjectController extends Controller
     public function __construct(ProjectRepository $projectRepo)
     {
         $this->projectRepo = $projectRepo;
+        $this->middleware('auth');
+        $this->middleware('permission:create-project|edit-project|delete_project', ['only' => ['index', 'show']]);
+        $this->middleware('permission:create-project', ['only' => 'store', 'createProject']);
+        $this->middleware('permission:edit-project', ['only' => 'edit', 'update']);
+        $this->middleware('permission:delete-project', ['only' => ['destroy']]);
+        $this->middleware('permission:assign-user-to-project', ['only' => ['assignUserToProjectForm', 'assignUserToProject']]);
+
     }
     /**
      * Display a listing of the resource.
@@ -83,4 +92,29 @@ class ProjectController extends Controller
     {
         return view('projects.create');
     }
+
+
+    //assign projects to user form
+    public function assignUserToProjectForm(String $id)
+    {
+        $asssignedUsers = DB::table('project_user')->where('project_id', $id)->pluck('user_id')->toArray();
+        $project = $this->projectRepo->getById($id);
+        return view('projects.assignUser', ['project' => $project, 'users' => User::without(['contact', 'record', 'projects'])->get(), 'assignedUsers' => $asssignedUsers]);
+    }
+
+
+
+    //assign projects to user store
+    public function assignUserToProject(Request $request)
+    {
+        $validateReq = $request->validate([
+            'user_id' => 'required|array',
+            'project_id' => 'required'
+        ]);
+        $user = $this->projectRepo->getById($validateReq['project_id']);
+        $user->users()->sync($validateReq['user_id']);
+
+        return redirect()->route('project.index')->withSuccess("Users assigned to project successfully");
+    }
+
 }
