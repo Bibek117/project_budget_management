@@ -4,8 +4,10 @@
     dd($projects)
 @endphp --}}
     <h3 class="text-center">Projects</h3>
-    <button class="btn btn-primary mb-3"><a class="text-white" href="{{ route('project.create') }}">Create a new Project <i
+    @can('create-project')
+        <button class="btn btn-primary mb-3"><a class="text-white" href="{{ route('project.create') }}">Create a new Project <i
                 class="bi bi-plus-circle"></i></a></button>
+    @endcan
     @if (session('success'))
         <p class="text-success">{{ session('success') }}</p>
     @endif

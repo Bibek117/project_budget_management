@@ -20,7 +20,7 @@ class UserController extends Controller
     public function __construct(UserRepository $obj)
     {
         $this->userRepo = $obj;
-        $this->middleware('permission:delete-user|register-user',['only'=>['index','show']]);
+        $this->middleware('permission:delete-user|register-user|view-user',['only'=>['index','show']]);
         $this->middleware('permission:register-user',['only'=>['create','register']]);
         $this->middleware('permission:assign-project-to-user',['only'=>['assignProjectToUserForm', 'assignProjectToUser']]);
         $this->middleware('permission:assign-contact',['only'=>['assignContactTypeToUserForm', 'assignContactTypeToUser']]);

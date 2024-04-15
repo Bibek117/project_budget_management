@@ -14,7 +14,7 @@
         </button>
     @endcan
     @if (session('success'))
-        <h3>{{session('success')}}</h3>
+        <p class="text-success">{{session('success')}}</p>
     @endif
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 mb-4 mt-5">

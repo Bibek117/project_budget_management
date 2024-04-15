@@ -33,7 +33,7 @@
         </form>
         <style>
             select[multiple] {
-                height: auto;
+                height: 300px;
             }
 
             select[multiple] option:checked {

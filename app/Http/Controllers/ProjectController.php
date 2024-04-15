@@ -6,8 +6,10 @@ use App\Models\User;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Repostories\ProjectRepository;
 use App\Http\Requests\StoreProjectRequest;
+
 
 
 class ProjectController extends Controller
@@ -17,9 +19,10 @@ class ProjectController extends Controller
     {
         $this->projectRepo = $projectRepo;
         $this->middleware('auth');
-        $this->middleware('permission:create-project|edit-project|delete_project', ['only' => ['index', 'show']]);
-        $this->middleware('permission:create-project', ['only' => 'store', 'createProject']);
-        $this->middleware('permission:edit-project', ['only' => 'edit', 'update']);
+        $this->middleware('permission:view-project',['only'=>['show']]);
+        $this->middleware('permission:create-project|edit-project|delete-project', ['only' => ['index']]);
+        $this->middleware('permission:create-project', ['only' => ['store', 'createProject']]);
+        $this->middleware('permission:edit-project', ['only' => ['edit', 'update']]);
         $this->middleware('permission:delete-project', ['only' => ['destroy']]);
         $this->middleware('permission:assign-user-to-project', ['only' => ['assignUserToProjectForm', 'assignUserToProject']]);
 
@@ -50,8 +53,22 @@ class ProjectController extends Controller
      */
     public function show(string $id)
     {
-        $result = $this->projectRepo->getById($id);
-        return view('projects.show', ['project' => $result]);
+      
+        $user = Auth::user();
+        if ($user->hasRole('Admin')) {
+            $result = $this->projectRepo->getById($id);
+            return view('projects.show', ['project' => $result]);
+        }
+
+        foreach($user->projects as $project){
+            if($project->id == $id){
+                $result = $this->projectRepo->getById($id);
+                return view('projects.show', ['project' => $result]);
+            }
+        }
+
+        return abort(403,"Unauthorized request");
+    
     }
 
     //get project for ajax

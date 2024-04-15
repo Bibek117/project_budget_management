@@ -18,11 +18,11 @@ class RoleSeeder extends Seeder
        $manager = Role::create(['name'=>'Manager']);
 
        $manager->givePermissionTo(([
-        'create-user',
+        'register-user',
        ]));
 
        $admin->givePermissionTo([
-        'create-user',
+        'register-user',
         'edit-user',
         'delete-user'
        ]);

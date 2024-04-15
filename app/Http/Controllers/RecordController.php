@@ -17,7 +17,7 @@ class RecordController extends Controller
     //index
     public function index(){
         $result = $this->recordRepo->getAll();
-        return response()->json(['result'=>$result,'success'=>true]);
+       return view('transactions.index',['records'=>$result]);
     }
 
     public function createRecord(Request $request){

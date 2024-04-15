@@ -19,7 +19,7 @@ class TransactionController extends Controller
     public function __construct(TransactionRepository $transactionRepo){
         $this->transactionRepo = $transactionRepo;
         $this->middleware('auth');
-        $this->middleware('permission:create-transaction|edit-transaction|delete-transaction',['only'=>['show','index']]);
+        $this->middleware('permission:create-transaction|edit-transaction|delete-transaction|view-transaction',['only'=>['show','index']]);
         $this->middleware('permission:create-transaction',['only'=>['store','create']]);
         $this->middleware('permission:edit-transaction',['only'=>['update','edit']]);
         $this->middleware('permission:delete-transaction',['only'=>['destroy']]);
@@ -77,7 +77,7 @@ class TransactionController extends Controller
         }else{
             Transaction::insert($data);
         }
-        return redirect()->route('transaction.index')->withSuccess('Transaction created successfully');
+        return redirect()->route('record.index')->withSuccess('Record created successfully');
     }
 
     /**

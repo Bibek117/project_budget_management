@@ -14,7 +14,7 @@ class TimelineController extends Controller
     public function __construct(TimelineRepository $timelineRepo){
         $this->timelineRepo = $timelineRepo;
         $this->middleware('auth');
-        $this->middleware('permission:create-timeline|edit-timeline|delete-timeline', ['only' => ['show', 'index']]);
+        $this->middleware('permission:create-timeline|edit-timeline|delete-timeline|view-timeline', ['only' => ['show', 'index']]);
         $this->middleware('permission:create-timeline', ['only' => ['store', 'createTimeline']]);
         $this->middleware('permission:edit-timeline', ['only' => ['update', 'edit']]);
         $this->middleware('permission:delete-timeline', ['only' => ['destroy']]);

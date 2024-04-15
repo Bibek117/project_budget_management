@@ -14,9 +14,9 @@ class RoleController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permission:create-role|edit-role|delete_role',['only'=>['index','show']]);
-        $this->middleware('permission:create-role',['only'=>'store','create']);
-        $this->middleware('permission:edit-role',['only'=>'edit','update']);
+        $this->middleware('permission:create-role|edit-role|delete-role|view-role',['only'=>['index','show']]);
+        $this->middleware('permission:create-role',['only'=>['store','create']]);
+        $this->middleware('permission:edit-role',['only'=>['edit','update']]);
         $this->middleware('permission:delete-role',['only'=>['destroy']]);
         $this->middleware('permission:assign-role',['only'=>['assign', 'editAddAssignedRole','updateAssignedRoles']]);
 
@@ -116,9 +116,9 @@ class RoleController extends Controller
     {
         $userAssociatedRoles = DB::select('SELECT users.id,users.username, GROUP_CONCAT(roles.name) AS roles, GROUP_CONCAT(roles.id) AS role_ids
      FROM users
-     INNER JOIN model_has_roles rel ON rel.model_id = users.id
-     INNER JOIN roles ON roles.id = rel.role_id
-     WHERE roles.name != "Super Admin"
+     LEFT JOIN model_has_roles rel ON rel.model_id = users.id
+     LEFT JOIN roles ON roles.id = rel.role_id
+     WHERE roles.name != "Super Admin" OR roles.name IS NULL
      GROUP BY users.username,users.id;');
         return view('role.assignRole', [ 'userAssociatedRoles' => $userAssociatedRoles]);
     }

@@ -16,9 +16,11 @@
 
 
      {{-- fonts --}}
-   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link
+         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+         rel="stylesheet">
      <style>
          * {
              font-family: "Roboto", sans-serif;
@@ -27,7 +29,7 @@
 
 
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-       <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
  </head>
  <!-- ... --->
 
@@ -48,7 +50,6 @@
                          </svg>
                      </button>
                      <a href="https://flowbite.com" class="flex ms-2 md:me-24">
-                         <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 me-3" alt="FlowBite Logo" />
                          <span class="self-center text-xl  sm:text-2xl whitespace-nowra font-mono">Manage</span>
                      </a>
                  </div>
@@ -68,50 +69,67 @@
                          <span class="flex-1 ms-3 whitespace-nowrap">Dashboard</span>
                      </a>
                      </li>
-
-                     <li>
-                         <a href={{ route('user.index') }}
-                             class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group">
-                             <i class="bi bi-person-circle"></i>
-                             <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
-                         </a>
-                     </li>
-                     <li>
+                     @if (auth()->user()->can('view-user') || auth()->user()->can('register-user'))
+                         <li>
+                             <a href={{ route('user.index') }}
+                                 class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group">
+                                 <i class="bi bi-person-circle"></i>
+                                 <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
+                             </a>
+                         </li>
+                     @endif
+                     @if (auth()->user()->can('create-project'))
+                          <li>
                          <a href="{{ route('project.index') }}"
                              class="d-flex align-items-center p-2 text-dark hover:bg-gray-100 rounded-lg ">
                              <i class="bi bi-folder-fill"></i>
                              <span class="flex-1 ms-3 whitespace-nowrap">Projects</span>
                          </a>
                      </li>
+                     @endif
+                    
                      {{-- @yield('budget_timeline_create') --}}
-                     <li>
+                     @can('create-timeline')
+                           <li>
                          <a href={{ route('timeline.create') }}
                              class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
                              <i class="bi bi-calendar2-week"></i>
                              <span class="flex-1 ms-3 whitespace-nowrap font-weight-lighter">Create Timeline</span>
                          </a>
                      </li>
-                     <li>
+                     @endcan
+                   @can('create-budget')
+                         <li>
                          <a href={{ route('budget.create') }}
                              class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
                              <i class="bi bi-cash-coin"></i>
                              <span class="flex-1 ms-3 whitespace-nowrap">Create Budget</span>
                          </a>
                      </li>
-                     <li>
+                   @endcan
+
+                   @if(auth()->user()->can('create-role') || auth()->user()->can('view-role')) 
+                   <li>
                          <a href={{ route('roles.index') }}
                              class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
                              <i class="bi bi-person-fill-gear"></i>
                              <span class="flex-1 ms-3 whitespace-nowrap">Roles</span>
                          </a>
                      </li>
-                     <li>
+                   @endif
+                    @can('create-contacttype')
+                        <li>
                          <a href={{ route('contacttype.index') }}
                              class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
                              <i class="bi bi-person-lines-fill"></i>
                              <span class="flex-1 ms-3 whitespace-nowrap">Contact Types</span>
                          </a>
-                     </li>
+                     </li> 
+                    @endcan
+                
+
+
+                {{-- TODO  --}}
                      <li>
                          <a href=""
                              class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
@@ -119,13 +137,17 @@
                              <span class="flex-1 ms-3 whitespace-nowrap">Report</span>
                          </a>
                      </li>
-                     <li>
-                         <a href="{{ route('transaction.index') }}"
+
+                     @if (auth()->user()->can('view-transaction') || auth()->user()->can('create-transaction'))
+                         <li>
+                         <a href="{{ route('record.index') }}"
                              class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
                              <i class="bi bi-receipt-cutoff"></i>
                              <span class="flex-1 ms-3 whitespace-nowrap">Records</span>
                          </a>
                      </li>
+                     @endif
+                     
                      <li>
                          <a href={{ route('logout') }}
                              class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">

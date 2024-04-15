@@ -1,8 +1,7 @@
 @extends('layouts.dashboardLayout')
 @section('content')
     <h3 class="text-center">Contact Types</h3>
-    <button class="btn btn-primary mb-3"><a class="text-white" href="{{ route('contacttype.create') }}">Create new Contact
-            Type</a></button>
+    <button class="btn btn-primary mb-3"><a class="text-white" href="{{ route('contacttype.create') }}">Create</a></button>
     @if (session('success'))
         <p class="text-success">{{ session('success') }}</p>
     @endif
@@ -18,15 +17,19 @@
             @forelse ($contacttypes as $contacttype)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td contenteditable="true">{{ $contacttype->name }}</td>
-                    <td>
-                        <form action={{ route('contacttype.destroy', $contacttype->id) }} method="post">
+                    <td>{{ $contacttype->name }}</td>
+                    <td class="d-flex">
+                         @can('edit-contacttype')
+                                  <a class="btn btn-success" href={{ route('contacttype.edit', $contacttype->id) }}
+                                class="font-medium text-blue-600  hover:underline">Edit</a>
+                            @endcan
+                            @can('delete-contacttype')
+                               <form action={{ route('contacttype.destroy', $contacttype->id) }} method="post">
                             @csrf
                             @method('DELETE')
-                            <a href={{ route('contacttype.edit', $contacttype->id) }}
-                                class="font-medium text-blue-600  hover:underline">Edit</a>
-                            | <button type="submit" class="font-medium text-red-600  hover:underline">Delete</button>
-                        </form>
+                             <button class="btn btn-danger" type="submit" class="font-medium text-red-600  hover:underline">Delete</button>
+                        </form> 
+                            @endcan
                     </td>
                 </tr>
             @empty

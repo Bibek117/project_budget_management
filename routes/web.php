@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ContacttypeController;
+use App\Http\Controllers\RecordController;
 use App\Http\Controllers\TransactionController;
 
 /*
@@ -110,7 +111,7 @@ Route::controller(ContacttypeController::class)->prefix('contacttypes')->group(f
 
 //transactions
 Route::controller(TransactionController::class)->prefix('transactions')->group(function () {
-    Route::get('/', 'index')->name('transaction.index');
+    // Route::get('/', 'index')->name('transaction.index');
     Route::get('/create','create')->name('transaction.create');
     Route::post('/', 'store')->name('transaction.store');
     Route::get('/{id}', 'show')->name('transaction.show');
@@ -120,4 +121,10 @@ Route::controller(TransactionController::class)->prefix('transactions')->group(f
     //ajax requests
     Route::get('/ajaxUsers/{id}', 'getUsersAjax')->name('contact.ajax');
  
+});
+
+
+//records
+Route::controller(RecordController::class)->prefix('records')->group(function(){
+    Route::get('/','index')->name('record.index');
 });
