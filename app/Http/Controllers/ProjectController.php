@@ -55,7 +55,7 @@ class ProjectController extends Controller
     {
       
         $user = Auth::user();
-        if ($user->hasRole('Admin')) {
+        if ($user->hasRole('Admin') || $user->hasRole('Super Admin')) {
             $result = $this->projectRepo->getById($id);
             return view('projects.show', ['project' => $result]);
         }

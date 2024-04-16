@@ -115,7 +115,9 @@ Route::controller(TransactionController::class)->prefix('transactions')->group(f
     Route::get('/create','create')->name('transaction.create');
     Route::post('/', 'store')->name('transaction.store');
     Route::get('/{id}', 'show')->name('transaction.show');
-    Route::put('/{id}', 'update')->name('transaction.update');
+
+    //todo
+    Route::put('/', 'update')->name('transaction.update');
     Route::delete('/{id}', 'destroy')->name('transaction.destroy');
 
     //ajax requests
@@ -127,4 +129,11 @@ Route::controller(TransactionController::class)->prefix('transactions')->group(f
 //records
 Route::controller(RecordController::class)->prefix('records')->group(function(){
     Route::get('/','index')->name('record.index');
+    Route::get('/{id}','show')->name('record.show');
+    Route::get('/{id}/edit','edit')->name('record.edit');
+
+    //todo
+    Route::put('/{id}','update')->name('record.update');
+
+    Route::delete('/{id}','destroy')->name('record.destroy');
 });

@@ -12,14 +12,14 @@ class Transaction extends Model
     protected $fillable = ['record_id','budget_id','contact_id','amount','desc','COA'];
 
     public function record(){
-        return $this->belongsTo(Record::class);
+        return $this->belongsTo(Record::class,'record_id');
     }
 
     public function contact(){
-        return $this->belongsTo(Contact::class);
+        return $this->belongsTo(Contact::class,'contact_id');
     }
 
     public function budget(){
-        return $this->belongsTo(Transaction::class);
+        return $this->belongsTo(Budget::class,'budget_id');
     }
 }

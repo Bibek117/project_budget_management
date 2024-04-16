@@ -87,21 +87,21 @@
                         <div class="form-group">
                             <select name="transactions[0][COA]" id="coa_0">
                                 <option value="" disabled selected>Charts of Accounts</option>
-                                <option value="Expenses">Utilities</option>
-                                <option value="Expenses">Supplies</option>
-                                <option value="Expenses">Travel</option>
-                                <option value="Assets">Cash</option>
-                                <option value="Assets">Investments</option>
-                                <option value="Liabilities">Accounts Payable</option>
-                                <option value="Liabilities">Loans</option>
-                                <option value="Equity">Retained Earnings</option>
-                                <option value="Equity">Donor Restricted</option>
-                                <option value="Equity">Board Designated</option>
-                                <option value="Equity">General</option>
-                                <option value="Income">Program Income</option>
-                                <option value="Income">Other Income</option>
-                                <option value="Expenses">Program Expenses</option>
-                                <option value="Expenses">Administrative Expenses</option>
+                                <option value="Utilities">Utilities</option>
+                                <option value="Supplies">Supplies</option>
+                                <option value="Travel">Travel</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Investments">Investments</option>
+                                <option value="Accounts Payable">Accounts Payable</option>
+                                <option value="Loans">Loans</option>
+                                <option value="Retained Earnings">Retained Earnings</option>
+                                <option value="Donor Restricted">Donor Restricted</option>
+                                <option value="Board Designated">Board Designated</option>
+                                <option value="General">General</option>
+                                <option value="Program Income">Program Income</option>
+                                <option value="Other Income">Other Income</option>
+                                <option value="Program Expenses">Program Expenses</option>
+                                <option value="Administrative Expenses">Administrative Expenses</option>
 
                             </select>
 

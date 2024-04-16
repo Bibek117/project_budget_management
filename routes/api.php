@@ -33,8 +33,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
-Route::controller(RecordController::class)->group(function(){
-    Route::post('/create-record', 'createRecord');
-});
+// Route::controller(RecordController::class)->group(function(){
+//     Route::post('/create-record', 'createRecord');
+// });
 
 

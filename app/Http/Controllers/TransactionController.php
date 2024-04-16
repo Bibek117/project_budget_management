@@ -7,6 +7,7 @@ use App\Models\Contact;
 use App\Models\Project;
 use App\Models\Contacttype;
 use App\Models\Transaction;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Repostories\TransactionRepository;
@@ -104,14 +105,14 @@ class TransactionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreTransactionRequest $request, string $id)
+    public function update(Request $request)
     {
-        try {
-            $result = $this->transactionRepo->updateById($id, $request->validated());
-            return response()->json(['result' => $result, 'success' => true]);
-        } catch (\Exception $e) {
-            return response()->json(['result' => $e, 'success' => false]);
-        }
+       
+      foreach($request->transactions as $transaction){
+            $result = $this->transactionRepo->updateById($transaction['id'],['COA'=>$transaction['COA'],'amount'=>$transaction['amount'],'desc'=>$transaction['desc']]);
+      }
+
+      return redirect()->route('record.index')->withSuccess("Record updated successfully");
     }
     
 
