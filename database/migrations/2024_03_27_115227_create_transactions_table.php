@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('contact_id')->constrained('contacts', 'id');
             $table->foreignId('budget_id')->nullable()->constrained('budgets', 'id');
             $table->string('desc');
-            $table->integer('amount');
+            $table->decimal('amount',60,4);
             $table->string('COA');
             $table->timestamps();
         });

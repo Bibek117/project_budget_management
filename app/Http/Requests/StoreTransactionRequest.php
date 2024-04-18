@@ -23,10 +23,25 @@ class StoreTransactionRequest extends FormRequest
     {
         return [
             'project_id'=>'required',
+            'execution_date'=>'required|date',
+            'code'=>'required|unique:records,code',
             'transactions'=>'required|array',
             'transactions.*.desc'=>'required|string',
-            'transactions.*.amount'=>'required|integer',
+            'transactions.*.amount'=>'required|numeric',
             'transactions.*.COA'=>'required'
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'project_id.required' => 'Please select a project',
+            'execution_date.required' => 'Date can not be empty',
         ];
     }
 }

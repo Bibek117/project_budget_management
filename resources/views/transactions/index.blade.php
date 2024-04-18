@@ -10,7 +10,7 @@
 
     <table class="table">
         <tr class="thead-light">
-            <th>Record Id</th>
+            <th>Record Code</th>
             <th>Created By</th>
             <th>Amount</th>
             <th>Project</th>
@@ -18,15 +18,16 @@
         </tr>
         @forelse ($records as $record)
             <tr>
-                <td>{{ $record->id }}</td>
+                <td>{{ $record->code }}</td>
                 <td>{{ $record->user->username }}</td>
                 @php
                     $total = 0;
                     foreach ($record->transaction as $transaction) {
+                        if($transaction->amount > 0)
                         $total += $transaction->amount;
                     }
                 @endphp
-                <td>Amount : {{ $total }}</td>
+                <td>{{ $total }}</td>
                 <td>{{ $record->project->title }}</td>
                 <td class="d-flex">
                     <button class="btn btn-info mr-2">

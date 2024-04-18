@@ -113,7 +113,6 @@ Route::controller(ContacttypeController::class)->prefix('contacttypes')->group(f
 Route::controller(TransactionController::class)->prefix('transactions')->group(function () {
     // Route::get('/', 'index')->name('transaction.index');
     Route::get('/create','create')->name('transaction.create');
-    Route::post('/', 'store')->name('transaction.store');
     Route::get('/{id}', 'show')->name('transaction.show');
 
     //todo
@@ -129,9 +128,9 @@ Route::controller(TransactionController::class)->prefix('transactions')->group(f
 //records
 Route::controller(RecordController::class)->prefix('records')->group(function(){
     Route::get('/','index')->name('record.index');
+    Route::post('/','store')->name('record.store');
     Route::get('/{id}','show')->name('record.show');
     Route::get('/{id}/edit','edit')->name('record.edit');
-
     //todo
     Route::put('/{id}','update')->name('record.update');
 

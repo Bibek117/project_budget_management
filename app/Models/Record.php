@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Record extends Model
 {
     use HasFactory;
-    protected $fillable  = ['user_id','project_id'];
+    protected $fillable  = ['user_id','project_id','code','execution_date'];
 
 
     //record belongs to project 

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('timeline_id')->constrained('timelines', 'id')->onDelete('cascade')->onUpdate('cascade');
             $table->string('name');
-            $table->bigInteger('amount');
+            $table->decimal('amount',60,4);
  //todo problem
             $table->timestamps();
         });

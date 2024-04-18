@@ -42,7 +42,7 @@ class PermissionSeeder extends Seeder
             'edit-timeline',
             'delete-timeline',
 
-            //project relalted permissions
+            //project related permissions
             'assign-user-to-project',
             'create-project',
             'edit-project',

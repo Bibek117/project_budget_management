@@ -19,7 +19,7 @@
             <tr>
                 <td>{{$loop->iteration}}</td>
                 <td>{{$transaction->id}}</td>
-                 <td>Rs : {{$transaction->amount}}</td>
+                 <td>{{$transaction->amount}}</td>
                  <td>{{$transaction->COA}}</td>
                  <td>{{$transaction->contact->user->username}}-{{$transaction->contact->contacttype->name}}</td>
                  <td>{{$transaction->budget->name ?? "-"}}</td>

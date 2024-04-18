@@ -45,41 +45,12 @@ class TransactionController extends Controller
      */
     public function create()
     {
+        // $test = Contacttype::all();
+        // dd($test[0]->contact[0]->user);
         return view('transactions.create', ['projects' => Project::all(),'contacttypes'=>Contacttype::all()]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreTransactionRequest $request)
-    {
-        $validatedData = $request;
-        $transaction_creater_id = Auth::user()->id;
-        $project_id = $validatedData->project_id;
-        $record = Record::create([
-            'user_id'=>$transaction_creater_id,
-            'project_id'=>$project_id
-        ]);
-        $data = [];
-        foreach($request->transactions as $transaction){
-            $contact_id = Contact::where('user_id','=',$transaction['user_id'])->where("contacttype_id",'=',$transaction['contacttype_id'])->pluck('id')->first();
-
-            $data[] = [
-                'record_id'=>$record->id,
-                'budget_id'=>$transaction['budget_id']??null,
-                'contact_id'=>$contact_id,
-                'desc'=>$transaction['desc'],
-                'amount'=>$transaction['amount'],
-                'COA'=>$transaction['COA'],
-            ];
-        }
-        if(count($data) == 1){
-            Transaction::create($data[0]);
-        }else{
-            Transaction::insert($data);
-        }
-        return redirect()->route('record.index')->withSuccess('Record created successfully');
-    }
+ 
 
     /**
      * Display the specified resource.

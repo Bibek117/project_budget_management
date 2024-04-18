@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Record;
+use App\Models\Contacttype;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Repostories\RecordRepository;
+use App\Http\Requests\StoreRecordRequest;
 
 class RecordController extends Controller
 {
@@ -33,7 +37,7 @@ class RecordController extends Controller
 
     public function edit($id){
         $transactionsInRecord = Transaction::where('record_id', $id)->latest()->get();
-        return view('transactions.update',['transactionsInRecord'=>$transactionsInRecord,'record'=>$this->recordRepo->getById($id)]);
+        return view('transactions.update',['transactionsInRecord'=>$transactionsInRecord,'record'=>$this->recordRepo->getById($id),'contacttypes'=>Contacttype::all()]);
     }
 
     //delete record
@@ -43,16 +47,34 @@ class RecordController extends Controller
         }
 
 
-    public function createRecord(Request $request){
-        $validatedRequest = $request->validate([
-            'user_id'=>'required',
-            'project_id'=>'required'
+    //store record and transasctions
+
+    public function store(StoreRecordRequest $request){
+        $validatedData = $request;
+        $transaction_creater_id = Auth::user()->id;
+        $project_id = $validatedData->project_id;
+        $record = Record::create([
+            'user_id' => $transaction_creater_id,
+            'project_id' => $project_id,
+            'execution_date' => $validatedData->execution_date,
+            'code' => $validatedData->code
         ]);
-        try {
-            $result = $this->recordRepo->create($validatedRequest);
-            return response()->json(['result' => $result, 'success' => true]);
-        } catch (\Exception $e) {
-            return response()->json(['result' => $e, 'success' => false]);
+        $data = [];
+        foreach ($request->transactions as $transaction) {
+            $data[] = [
+                'record_id' => $record->id,
+                'budget_id' => $transaction['budget_id'] ?? null,
+                'contact_id' => $transaction['contact_id'],
+                'desc' => $transaction['desc'],
+                'amount' => $transaction['amount'],
+                'COA' => $transaction['COA'],
+            ];
         }
+        if (count($data) == 1) {
+            Transaction::create($data[0]);
+        } else {
+            Transaction::insert($data);
+        }
+        return redirect()->route('record.index')->withSuccess('Record created successfully');
     }
 }
