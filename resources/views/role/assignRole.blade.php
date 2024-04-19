@@ -36,7 +36,7 @@
                            @endif
                         </td>
                          <td class="px-6 py-4">
-                            <a href="{{route('role.editAssign',$userAssociate->id)}}" class="font-medium text-blue-500 hover:underline">Assign/Edit</a>
+                            <a href="{{route('roles.editAssign',$userAssociate->id)}}" class="font-medium text-blue-500 hover:underline">Assign/Edit</a>
                         </td>
                     </tr>
                 @endforeach

@@ -10,7 +10,7 @@
     @can('assign-role')
     <button type="button"
             class="btn btn-primary">
-            <a class="text-white" href={{ route('role.assign') }}>Assign Role</a>
+            <a class="text-white" href={{ route('roles.assign') }}>Assign Role</a>
         </button>
     @endcan
     @if (session('success'))

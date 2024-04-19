@@ -13,7 +13,7 @@
 
             <div class="card">
                 <fiv class="card-body">
-                    <form action="{{ route('role.updateAssign') }}" method="post">
+                    <form action="{{ route('roles.updateAssign') }}" method="post">
                         @csrf
                         <input type="hidden" name="user_id" value="{{$user->id}}">
                         <div class="form-group">

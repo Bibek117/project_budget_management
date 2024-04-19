@@ -31,4 +31,17 @@ class StoreRecordRequest extends FormRequest
             'transactions.*.COA' => 'required'
         ];
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'project_id.required' => 'Please select a project',
+            'execution_date.required' => 'Date can not be empty',
+        ];
+    }
 }

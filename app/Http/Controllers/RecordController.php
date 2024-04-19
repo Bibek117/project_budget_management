@@ -6,6 +6,7 @@ use App\Models\Record;
 use App\Models\Contacttype;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Repostories\RecordRepository;
 use App\Http\Requests\StoreRecordRequest;
@@ -29,8 +30,11 @@ class RecordController extends Controller
     //show single record i.e has multiple transactions
 
     public function show($id){
+        $record = $this->recordRepo->getById($id);
+        $execDate = $record->execution_date;
+        $timeline = DB::select('SELECT * FROM timelines WHERE ? BETWEEN start_date AND end_date',[$execDate]);
         $transactionsInRecord = Transaction::where('record_id',$id)->latest()->get();
-        return view('transactions.show',['transactionsInRecord'=>$transactionsInRecord]);
+        return view('transactions.show',['transactionsInRecord'=>$transactionsInRecord,'record'=>$record,'timeline'=>$timeline]);
     }
 
     //show transaction edit form

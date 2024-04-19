@@ -25,6 +25,12 @@
          * {
              font-family: "Roboto", sans-serif;
          }
+
+         .active {
+             color: white;
+             background-color: rgb(49, 189, 49);
+
+         }
      </style>
 
 
@@ -35,36 +41,50 @@
 
  <body>
      <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 ">
-         <div class="px-3 py-3 lg:px-5 lg:pl-3">
+         <div class="px-3 py-2 lg:px-5 lg:pl-3">
              <div class="flex items-center justify-between">
-                 <div class="flex items-center justify-start rtl:justify-end">
-                     <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar"
-                         aria-controls="logo-sidebar" type="button"
-                         class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
-                         <span class="sr-only">Open sidebar</span>
-                         <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
-                             xmlns="http://www.w3.org/2000/svg">
-                             <path clip-rule="evenodd" fill-rule="evenodd"
-                                 d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
-                             </path>
-                         </svg>
-                     </button>
-                     <a href="https://flowbite.com" class="flex ms-2 md:me-24">
-                         <span class="self-center text-xl  sm:text-2xl whitespace-nowra font-mono">Manage</span>
+                 <div class="flex items-center justify-content-around rtl:justify-end">
+
+                     <a href="#" class="flex ms-2 md:me-24 hover:no-underline">
+                         <span class="self-center text-xl  sm:text-2xl whitespace-nowrap">Manage</span>
                      </a>
                  </div>
-
+                     <div class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Hello {{ Auth::user()->username ?? 'Unknown user' }} |
+                                <i class="bi bi-person-circle text-dark ml-2 text-[20px]"></i>
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                   <i class="bi bi-person-circle  mr-2 text-gray-400"></i>
+                                    <span class="text-sm">Profile</span>
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                   <i class="bi bi-gear  mr-2 text-gray-400"></i>
+                                  <span class="text-sm">Settings</span>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{route('logout') }}" >
+                                    <i class="bi bi-box-arrow-right mr-2 text-gray-400"></i>
+                                     <span class="text-sm">Logout</span>
+                                </a>
+                            </div>
+                        </div>
              </div>
+         </div>
      </nav>
 
      <aside id="logo-sidebar"
-         class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0"
+         class="fixed top-0 left-0 z-40 w-63 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0"
          aria-label="Sidebar">
          <div class="h-full px-3 pb-4 overflow-y-auto bg-white">
              <ul class="space-y-2 font-medium">
                  <li">
                      <a href={{ route('dashbaord') }}
-                         class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                         class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:bg-green-100 hover:no-underline hover:text-green-500 hover:scale-110  group {{ request()->routeIs('dashbaord') ? 'active' : '' }}">
                          <i class="bi bi-speedometer"></i>
                          <span class="flex-1 ms-3 whitespace-nowrap">Dashboard</span>
                      </a>
@@ -72,67 +92,67 @@
                      @if (auth()->user()->can('view-user') || auth()->user()->can('register-user'))
                          <li>
                              <a href={{ route('user.index') }}
-                                 class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group">
+                                 class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg  duration-500  hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group  {{ request()->routeIs('user.*') ? 'active' : '' }}">
                                  <i class="bi bi-person-circle"></i>
                                  <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
                              </a>
                          </li>
                      @endif
                      @if (auth()->user()->can('create-project'))
-                          <li>
-                         <a href="{{ route('project.index') }}"
-                             class="d-flex align-items-center p-2 text-dark hover:bg-gray-100 rounded-lg ">
-                             <i class="bi bi-folder-fill"></i>
-                             <span class="flex-1 ms-3 whitespace-nowrap">Projects</span>
-                         </a>
-                     </li>
+                         <li>
+                             <a href="{{ route('project.index') }}"
+                                 class="flex text-[14px] items-center p-2  text-gray-900 transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 rounded-lg {{ request()->routeIs('project.*') ? 'active' : '' }} ">
+                                 <i class="bi bi-folder-fill"></i>
+                                 <span class="flex-1 ms-3 whitespace-nowrap">Projects</span>
+                             </a>
+                         </li>
                      @endif
-                    
+
                      {{-- @yield('budget_timeline_create') --}}
                      @can('create-timeline')
-                           <li>
-                         <a href={{ route('timeline.create') }}
-                             class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
-                             <i class="bi bi-calendar2-week"></i>
-                             <span class="flex-1 ms-3 whitespace-nowrap font-weight-lighter">Create Timeline</span>
-                         </a>
-                     </li>
-                     @endcan
-                   @can('create-budget')
                          <li>
-                         <a href={{ route('budget.create') }}
-                             class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
-                             <i class="bi bi-cash-coin"></i>
-                             <span class="flex-1 ms-3 whitespace-nowrap">Create Budget</span>
-                         </a>
-                     </li>
-                   @endcan
+                             <a href={{ route('timeline.create') }}
+                                 class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group {{ request()->routeIs('timeline.*') ? 'active' : '' }}">
+                                 <i class="bi bi-calendar2-week"></i>
+                                 <span class="flex-1 ms-3 whitespace-nowrap font-weight-lighter">Create Timeline</span>
+                             </a>
+                         </li>
+                     @endcan
+                     @can('create-budget')
+                         <li>
+                             <a href={{ route('budget.create') }}
+                                 class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group {{ request()->routeIs('budget.*') ? 'active' : '' }}">
+                                 <i class="bi bi-cash-coin"></i>
+                                 <span class="flex-1 ms-3 whitespace-nowrap">Create Budget</span>
+                             </a>
+                         </li>
+                     @endcan
 
-                   @if(auth()->user()->can('create-role') || auth()->user()->can('view-role')) 
-                   <li>
-                         <a href={{ route('roles.index') }}
-                             class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
-                             <i class="bi bi-person-fill-gear"></i>
-                             <span class="flex-1 ms-3 whitespace-nowrap">Roles</span>
-                         </a>
-                     </li>
-                   @endif
-                    @can('create-contacttype')
-                        <li>
-                         <a href={{ route('contacttype.index') }}
-                             class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
-                             <i class="bi bi-person-lines-fill"></i>
-                             <span class="flex-1 ms-3 whitespace-nowrap">Contact Types</span>
-                         </a>
-                     </li> 
-                    @endcan
-                
+                     @if (auth()->user()->can('create-role') || auth()->user()->can('view-role'))
+                         <li>
+                             <a href={{ route('roles.index') }}
+                                 class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group {{ request()->routeIs('roles.*') ? 'active' : '' }}">
+                                 <i class="bi bi-person-fill-gear"></i>
+                                 <span class="flex-1 ms-3 whitespace-nowrap">Roles</span>
+                             </a>
+                         </li>
+                     @endif
+                     @can('create-contacttype')
+                         <li>
+                             <a href={{ route('contacttype.index') }}
+                                 class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group {{ request()->routeIs('contacttype.*') ? 'active' : '' }}">
+                                 <i class="bi bi-person-lines-fill"></i>
+                                 <span class="flex-1 ms-3 whitespace-nowrap">Contact Types</span>
+                             </a>
+                         </li>
+                     @endcan
 
 
-                {{-- TODO  --}}
+
+                     {{-- TODO  --}}
                      <li>
                          <a href=""
-                             class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
+                             class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group {{ request()->routeIs('report.*') ? 'active' : '' }}">
                              <i class="bi bi-file-earmark-bar-graph"></i>
                              <span class="flex-1 ms-3 whitespace-nowrap">Report</span>
                          </a>
@@ -140,21 +160,13 @@
 
                      @if (auth()->user()->can('view-transaction') || auth()->user()->can('create-transaction'))
                          <li>
-                         <a href="{{ route('record.index') }}"
-                             class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
-                             <i class="bi bi-receipt-cutoff"></i>
-                             <span class="flex-1 ms-3 whitespace-nowrap">Records</span>
-                         </a>
-                     </li>
+                             <a href="{{ route('record.index') }}"
+                                 class="flex text-[14px]  items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group {{ request()->routeIs('record.*') ? 'active' : '' }}">
+                                 <i class="bi bi-receipt-cutoff"></i>
+                                 <span class="flex-1 ms-3 whitespace-nowrap">Records</span>
+                             </a>
+                         </li>
                      @endif
-                     
-                     <li>
-                         <a href={{ route('logout') }}
-                             class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
-                             <i class="bi bi-box-arrow-right"></i>
-                             <span class="flex-1 ms-3 whitespace-nowrap">Logout</span>
-                         </a>
-                     </li>
              </ul>
          </div>
      </aside>
@@ -163,15 +175,15 @@
          @yield('content')
      </div>
      {{-- bootstrap --}}
-     <script src="https://code.jquery.com/jquery-3.1.1.min.js">
-         < script src = "https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-         integrity = "sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-         crossorigin = "anonymous" >
+     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
      </script>
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+         integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
      </script>
-
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+         integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous">
+     </script>
      @stack('other-scripts')
  </body>
 

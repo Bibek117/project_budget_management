@@ -32,9 +32,9 @@ Route::get('/', function () {
 
 Route::resources(['roles' => RoleController::class]);
 
-Route::get('/assign-role', [RoleController::class, 'assign'])->name('role.assign');
-Route::get('/edit-assigned-role/{id}', [RoleController::class, 'editAddAssignedRole'])->name('role.editAssign');
-Route::post('/edit-assigned-role', [RoleController::class, 'updateAssignedRoles'])->name('role.updateAssign');
+Route::get('/assign-role', [RoleController::class, 'assign'])->name('roles.assign');
+Route::get('/edit-assigned-role/{id}', [RoleController::class, 'editAddAssignedRole'])->name('roles.editAssign');
+Route::post('/edit-assigned-role', [RoleController::class, 'updateAssignedRoles'])->name('roles.updateAssign');
 
 
 //users
@@ -113,6 +113,7 @@ Route::controller(ContacttypeController::class)->prefix('contacttypes')->group(f
 Route::controller(TransactionController::class)->prefix('transactions')->group(function () {
     // Route::get('/', 'index')->name('transaction.index');
     Route::get('/create','create')->name('transaction.create');
+    // Route::post('/', 'store')->name('transaction.store');
     Route::get('/{id}', 'show')->name('transaction.show');
 
     //todo
