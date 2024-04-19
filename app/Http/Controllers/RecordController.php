@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Record;
+use App\Models\Timeline;
 use App\Models\Contacttype;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Repostories\RecordRepository;
 use App\Http\Requests\StoreRecordRequest;
+use App\Http\Requests\UpdateRecordRequest;
 
 class RecordController extends Controller
 {
@@ -40,8 +42,13 @@ class RecordController extends Controller
     //show transaction edit form
 
     public function edit($id){
+        $record = $this->recordRepo->getById($id);
         $transactionsInRecord = Transaction::where('record_id', $id)->latest()->get();
-        return view('transactions.update',['transactionsInRecord'=>$transactionsInRecord,'record'=>$this->recordRepo->getById($id),'contacttypes'=>Contacttype::all()]);
+        $timeline = Timeline::where('start_date', '<=', $record->execution_date)
+        ->where('end_date', '>=', $record->execution_date)
+        ->get();
+
+        return view('transactions.update',['transactionsInRecord'=>$transactionsInRecord,'record'=>$record,'contacttypes'=>Contacttype::all(),'selectedTimeline'=>$timeline[0]]);
     }
 
     //delete record
@@ -81,4 +88,23 @@ class RecordController extends Controller
         }
         return redirect()->route('record.index')->withSuccess('Record created successfully');
     }
+
+
+    //update record
+    public function update(UpdateRecordRequest $request,$id){
+         $this->recordRepo->updateById($id,['code'=>$request->code,'execution_date'=>$request->execution_date]);
+        foreach ($request->transactions as $transaction) {
+            $trans = Transaction::find($transaction['id']);
+            if($trans){
+                $trans->contact_id = $transaction['contact_id'];
+                $trans->budget_id = $transaction['budget_id']?? null;
+                $trans->COA = $transaction['COA'];
+                $trans->amount = $transaction['amount'];
+                $trans->desc = $transaction['desc'];
+                $trans->save();
+            }
+        }
+        return redirect()->route('record.index')->withSuccess("Record updated successfully");
+    }
+
 }

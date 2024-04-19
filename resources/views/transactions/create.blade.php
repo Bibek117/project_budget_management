@@ -41,8 +41,12 @@
                 <div class="ml-4 form-group" id="r_code">
                     <input type="hidden" value="" name="code" id="hidden_code">
                     <label for="code">Record Code</label><br>
-                    <span>rc-</span>
-                    <input type="text"  id="code" placeholder="i.e 001">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">rc-</span>
+                        </div>
+                        <input type="text" id="code" placeholder="i.e 001">
+                    </div>
                 </div>
                 <div class="ml-4 form-group d-none" id="exe_date">
                     <label for="execution_date">Transactions performed date</label><br>
@@ -142,8 +146,8 @@
                     </td>
                     <td>
                         <div class="form-group">
-                            <input type="number" class="form-control net_amount" step="0.0001" name="transactions[0][amount]"
-                                id="amount_0">
+                            <input type="number" class="form-control net_amount" step="0.0001"
+                                name="transactions[0][amount]" id="amount_0">
                         </div>
                     </td>
                     <td>
@@ -206,7 +210,7 @@
                     <td>
                         <div class="form-group">
                             <input type="number" class="form-control net_amount" name="transactions[1][amount]"
-                                id="amount_1" step="0.0001" >
+                                id="amount_1" step="0.0001">
                         </div>
                     </td>
                     <td>
@@ -409,7 +413,7 @@
                     $('#display_net').text(total);
                 }
 
-                $('#code').on('input',function(){
+                $('#code').on('input', function() {
                     $('#hidden_code').val(`rc-${$(this).val()}`)
                 })
 

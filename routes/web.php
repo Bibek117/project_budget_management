@@ -117,7 +117,7 @@ Route::controller(TransactionController::class)->prefix('transactions')->group(f
     Route::get('/{id}', 'show')->name('transaction.show');
 
     //todo
-    Route::put('/', 'update')->name('transaction.update');
+    // Route::put('/', 'update')->name('transaction.update');
     Route::delete('/{id}', 'destroy')->name('transaction.destroy');
 
     //ajax requests
