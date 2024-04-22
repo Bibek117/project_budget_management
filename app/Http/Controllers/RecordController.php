@@ -94,15 +94,19 @@ class RecordController extends Controller
     public function update(UpdateRecordRequest $request,$id){
          $this->recordRepo->updateById($id,['code'=>$request->code,'execution_date'=>$request->execution_date]);
         foreach ($request->transactions as $transaction) {
-            $trans = Transaction::find($transaction['id']);
-            if($trans){
-                $trans->contact_id = $transaction['contact_id'];
-                $trans->budget_id = $transaction['budget_id']?? null;
-                $trans->COA = $transaction['COA'];
-                $trans->amount = $transaction['amount'];
-                $trans->desc = $transaction['desc'];
-                $trans->save();
-            }
+            Transaction::updateOrCreate(
+                //where
+                ['id'=>$transaction['id']??null],
+                //update or create
+                [
+                    'record_id'=>$id,
+                    'contact_id'=>$transaction['contact_id'],
+                    'budget_id'=>$transaction['budget_id']?? null,
+                    'COA' => $transaction['COA'],
+                    'amount' => $transaction['amount'],
+                    'desc'=> $transaction['desc']
+                    ]
+                );
         }
         return redirect()->route('record.index')->withSuccess("Record updated successfully");
     }

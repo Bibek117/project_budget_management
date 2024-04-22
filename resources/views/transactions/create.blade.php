@@ -5,16 +5,12 @@
     @endphp --}}
     <h3 class="text-center">Create record</h3>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    <form action="{{ route('record.store') }}" method="POST">
+   <div class="card">
+    <div class="card-body">
+        <div id="success-message"></div>
+    </div>
+   </div>
+    <form  id="record_form">
         @csrf
         <div class="card mb-4">
             <div class="d-flex card-body">
@@ -67,7 +63,7 @@
                     <th scope="col">Budget Head</th>
                     <th scope="col">Description</th>
                     <th scope="col">Amount</th>
-                    <th scope="col">Action</th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody id="table_body">
@@ -75,23 +71,31 @@
                     <td>
                         <div class="form-group">
                             <select name="transactions[0][COA]" id="coa_0">
-                                <option value="" disabled selected>Charts of Accounts</option>
-                                <option value="Utilities">Utilities</option>
-                                <option value="Supplies">Supplies</option>
-                                <option value="Travel">Travel</option>
-                                <option value="Cash">Cash</option>
-                                <option value="Investments">Investments</option>
-                                <option value="Accounts Payable">Accounts Payable</option>
-                                <option value="Loans">Loans</option>
-                                <option value="Retained Earnings">Retained Earnings</option>
-                                <option value="Donor Restricted">Donor Restricted</option>
-                                <option value="Board Designated">Board Designated</option>
-                                <option value="General">General</option>
-                                <option value="Program Income">Program Income</option>
-                                <option value="Other Income">Other Income</option>
-                                <option value="Program Expenses">Program Expenses</option>
-                                <option value="Administrative Expenses">Administrative Expenses</option>
-
+                                <optgroup label="Receivables">
+                                    <option value="receive-grant">Grants and Funding</option>
+                                    <option value="receive-donation">Donations and Contributions</option>
+                                    <option value="receive-pledge">Pledges and Commitments</option>
+                                    <option value="receive-membership">Membership and Subscriptions</option>
+                                    <option value="receive-program">Program Fees and Sales</option>
+                                </optgroup>
+                                <optgroup label="Payables">
+                                    <option value="payable-salary">Salaries and Compensation</option>
+                                    <option value="payable-account">Accounts Payable</option>
+                                    <option value="payable-rent">Rent and Leases</option>
+                                    <option value="payable-utility">Utilities and Services</option>
+                                    <option value="payable-tax">Taxes and Duties</option>
+                                </optgroup>
+                                <optgroup label="Bank/Cash">
+                                    <option value="bc-bank">Bank Accounts</option>
+                                    <option value="bc-cash">Cash in Hand</option>
+                                </optgroup>
+                                <optgroup label="Expenses">
+                                    <option value="expense-program">Program Costs and Services</option>
+                                    <option value="expense-fundandmarket">Fundraising and Marketing</option>
+                                    <option value="expense-administrative">Administrative and Overhead</option>
+                                    <option value="expense-advocacy">Advocacy and Awareness</option>
+                                    <option value="expense-grantandproject">Grants and Projects</option>
+                                </optgroup>
                             </select>
 
                         </div>
@@ -151,30 +155,38 @@
                         </div>
                     </td>
                     <td>
-                        <p class="text-danger">*Required</p>
+                      
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <div class="form-group">
                             <select name="transactions[1][COA]" id="coa_1">
-                                <option value="" disabled selected>Charts of Accounts</option>
-                                <option value="Expenses">Utilities</option>
-                                <option value="Expenses">Supplies</option>
-                                <option value="Expenses">Travel</option>
-                                <option value="Assets">Cash</option>
-                                <option value="Assets">Investments</option>
-                                <option value="Liabilities">Accounts Payable</option>
-                                <option value="Liabilities">Loans</option>
-                                <option value="Equity">Retained Earnings</option>
-                                <option value="Equity">Donor Restricted</option>
-                                <option value="Equity">Board Designated</option>
-                                <option value="Equity">General</option>
-                                <option value="Income">Program Income</option>
-                                <option value="Income">Other Income</option>
-                                <option value="Expenses">Program Expenses</option>
-                                <option value="Expenses">Administrative Expenses</option>
-
+                               <optgroup label="Receivables">
+                                    <option value="receive-grant">Grants and Funding</option>
+                                    <option value="receive-donation">Donations and Contributions</option>
+                                    <option value="receive-pledge">Pledges and Commitments</option>
+                                    <option value="receive-membership">Membership and Subscriptions</option>
+                                    <option value="receive-program">Program Fees and Sales</option>
+                                </optgroup>
+                                <optgroup label="Payables">
+                                    <option value="payable-salary">Salaries and Compensation</option>
+                                    <option value="payable-account">Accounts Payable</option>
+                                    <option value="payable-rent">Rent and Leases</option>
+                                    <option value="payable-utility">Utilities and Services</option>
+                                    <option value="payable-tax">Taxes and Duties</option>
+                                </optgroup>
+                                <optgroup label="Bank/Cash">
+                                    <option value="bc-bank">Bank Accounts</option>
+                                    <option value="bc-cash">Cash in Hand</option>
+                                </optgroup>
+                                <optgroup label="Expenses">
+                                    <option value="expense-program">Program Costs and Services</option>
+                                    <option value="expense-fundandmarket">Fundraising and Marketing</option>
+                                    <option value="expense-administrative">Administrative and Overhead</option>
+                                    <option value="expense-advocacy">Advocacy and Awareness</option>
+                                    <option value="expense-grantandproject">Grants and Projects</option>
+                                </optgroup>
                             </select>
 
                         </div>
@@ -214,7 +226,7 @@
                         </div>
                     </td>
                     <td>
-                        <p class="text-danger">*Required</p>
+                       
                     </td>
                 </tr>
             </tbody>
@@ -321,22 +333,31 @@
                           <td>
                         <div class="form-group">
                             <select name="transactions[${index}][COA]" id="coa_${index}">
-                                <option value="" disabled selected>Charts of Accounts</option>
-                                <option value="Expenses">Utilities</option>
-                                <option value="Expenses">Supplies</option>
-                                <option value="Expenses">Travel</option>
-                                <option value="Assets">Cash</option>
-                                <option value="Assets">Investments</option>
-                                <option value="Liabilities">Accounts Payable</option>
-                                <option value="Liabilities">Loans</option>
-                                <option value="Equity">Retained Earnings</option>
-                                <option value="Equity">Donor Restricted</option>
-                                <option value="Equity">Board Designated</option>
-                                <option value="Equity">General</option>
-                                <option value="Income">Program Income</option>
-                                <option value="Income">Other Income</option>
-                                <option value="Expenses">Program Expenses</option>
-                                <option value="Expenses">Administrative Expenses</option>
+                                <optgroup label="Receivables">
+                                    <option value="receive-grant">Grants and Funding</option>
+                                    <option value="receive-donation">Donations and Contributions</option>
+                                    <option value="receive-pledge">Pledges and Commitments</option>
+                                    <option value="receive-membership">Membership and Subscriptions</option>
+                                    <option value="receive-program">Program Fees and Sales</option>
+                                </optgroup>
+                                <optgroup label="Payables">
+                                    <option value="payable-salary">Salaries and Compensation</option>
+                                    <option value="payable-account">Accounts Payable</option>
+                                    <option value="payable-rent">Rent and Leases</option>
+                                    <option value="payable-utility">Utilities and Services</option>
+                                    <option value="payable-tax">Taxes and Duties</option>
+                                </optgroup>
+                                <optgroup label="Bank/Cash">
+                                    <option value="bc-bank">Bank Accounts</option>
+                                    <option value="bc-cash">Cash in Hand</option>
+                                </optgroup>
+                                <optgroup label="Expenses">
+                                    <option value="expense-program">Program Costs and Services</option>
+                                    <option value="expense-fundandmarket">Fundraising and Marketing</option>
+                                    <option value="expense-administrative">Administrative and Overhead</option>
+                                    <option value="expense-advocacy">Advocacy and Awareness</option>
+                                    <option value="expense-grantandproject">Grants and Projects</option>
+                                </optgroup>
 
                             </select>
 
@@ -415,6 +436,40 @@
 
                 $('#code').on('input', function() {
                     $('#hidden_code').val(`rc-${$(this).val()}`)
+                })
+
+
+                //form submit ajax
+                 //budget form submit
+                $('#record_form').submit(function(e) {
+                    e.preventDefault();
+                    let form = $('#record_form');
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('record.store') }}",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: form.serialize(),
+                        success: function(response) {
+                            $('#success-msg').html(
+                                `<div class="alert alert-success" id="success-message">
+                    ${response.message}
+                </div>`
+                            );
+                            $('#record_form')[0].reset();
+                            setTimeout(function() {
+                                $('#success-message').fadeOut();
+                            }, 3000);
+                        },
+                        error: function(xhr, status, error) {
+                            $.each(xhr.responseJSON.errors,function(index,error){
+                                // console.log(error[0])
+                                $('#success-message').append('<p class="text-danger">'+error[0]+'</p>')
+                            })
+                            console.log(xhr.responseJSON.errors)
+                        }
+                    })
                 })
 
             });

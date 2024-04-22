@@ -51,7 +51,6 @@ Route::controller(UserController::class)->prefix('users')->group(function () {
     Route::delete('/{id}', 'destroy')->name('user.destroy');
     Route::get('/assign-project-user/{id}', 'assignProjectToUserForm')->name('user.assign.project.create');
     Route::post('/assign-project-user', 'assignProjectToUser')->name('user.assign.project.store');
-
     Route::get('/assign-contacttype-user/{id}', 'assignContactTypeToUserForm')->name('user.assign.ctype.create');
     Route::post('/assign-contacttype-user', 'assignContactTypeToUser')->name('user.assign.ctype.store');
 });

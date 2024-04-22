@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
-use Illuminate\Http\Request;
 use App\Models\Contacttype;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Repostories\ContacttypeRepository;
 
 class ContacttypeController extends Controller
 {
     private $contacttypeRepo;
-    public function __construct(ContacttypeRepository $contacttypeRepo){
+    public function __construct(ContacttypeRepository $contacttypeRepo)
+    {
         $this->contacttypeRepo = $contacttypeRepo;
         $this->middleware('auth');
         $this->middleware('permission:create-contacttype|edit-contacttype|delete-contacttype|view-contacttype', ['only' => ['show', 'index']]);
@@ -21,13 +23,24 @@ class ContacttypeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        try {
-            $result = $this->contacttypeRepo->getAll();
-            return view('contacts.index',['contacttypes'=>$result]);
-        } catch (\Exception $e) {
-            return response()->json(['result' => $e, 'success' => false]);
+        // try {
+        //     $result = $this->contacttypeRepo->getAll();
+        //     return view('contacts.index',['contacttypes'=>$result]);
+        // } catch (\Exception $e) {
+        //     return response()->json(['result' => $e, 'success' => false]);
+        // }
+
+        $limit = 3;
+        $offset = $request->query('offset') ?? null;
+        if ($offset == null) {
+            $totalRecords = Contacttype::count();
+            $result = DB::select('SELECT * FROM contacttypes LIMIT ? ', [$limit]);
+            return view('contacts.index', ['totalContacttypes' => $totalRecords, 'contacttypes' => $result]);
+        } else {
+            $result = DB::select('SELECT * FROM contacttypes LIMIT ? OFFSET ?', [$limit, $offset]);
+            return view('contacts.index', ['contacttypes' => $result,'currenOffset'=>$offset]);
         }
     }
 
@@ -45,19 +58,19 @@ class ContacttypeController extends Controller
     public function store(Request $request)
     {
         $validatedReq = $request->validate([
-            'contacttypes'=>'required|array',
-            'contacttypes.*.name'=>'required|string'
+            'contacttypes' => 'required|array',
+            'contacttypes.*.name' => 'required|string'
         ]);
-       $contactData = [];
-       foreach($validatedReq['contacttypes'] as $contacttype){
-         $contactData[] = ['name'=>$contacttype['name']];
-       }
-       if(count($contactData) == 1){
-        Contacttype::create($contactData[0]);
-       }else{
-        Contacttype::insert($contactData);
-       }
-       return redirect()->route('contacttype.index')->withSuccess("Contact Type created successfully");
+        $contactData = [];
+        foreach ($validatedReq['contacttypes'] as $contacttype) {
+            $contactData[] = ['name' => $contacttype['name']];
+        }
+        if (count($contactData) == 1) {
+            Contacttype::create($contactData[0]);
+        } else {
+            Contacttype::insert($contactData);
+        }
+        return redirect()->route('contacttype.index')->withSuccess("Contact Type created successfully");
     }
 
     /**
@@ -79,7 +92,7 @@ class ContacttypeController extends Controller
     public function edit(String $id)
     {
         $contacttype = Contacttype::find($id);
-        return view('contacts.update',['contacttype'=>$contacttype]);
+        return view('contacts.update', ['contacttype' => $contacttype]);
     }
 
     /**
