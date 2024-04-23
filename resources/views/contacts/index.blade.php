@@ -5,6 +5,9 @@
     @if (session('success'))
         <p class="text-success">{{ session('success') }}</p>
     @endif
+    @php
+        $allContactTypesCount = $totalContacttypes;
+    @endphp
     <table class="table">
         <thead class="thead-dark">
             <tr>
@@ -13,7 +16,7 @@
                 <th scope="col">Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tableBody">
             @forelse ($contacttypes as $contacttype)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
@@ -38,39 +41,80 @@
                     <td colspan="3">No contacts type found</td>
                 </tr>
             @endforelse
+
+        </tbody>
+        <tfoot id="tableFooter">
             <tr>
-                <td>Showing 1 to 3 out of {{$totalContacttypes}} results</td>
+                <td id="paginationCount">Showing 1 to 3 out of {{ $allContactTypesCount }} results</td>
                 <td></td>
                 <td>
                     <button id="prev" class="btn btn-primary">Prev</button>
                     <button id="next" class="btn btn-primary">Next</button>
                 </td>
             </tr>
-        </tbody>
+        </tfoot>
     </table>
-   
+
     @push('other-scripts')
         <script>
-            $(document).ready(function(){
-                var offset = 0;
-                $('#next').click(function(){
-                    offset +=3;
-                    callTest(offset);
-                })
+            function callNextPage(offset) {
+                $.ajax({
+                    url: `/contacttypes/?offset=${offset}`,
+                    type: 'GET',
+                    success: function(response) {
+                        $('#tableBody').empty();
+                        $.each(response.contacttypes, function(index, contacttype) {
+                            let test = 5
+                            let htmlRow = ` <tr>
+                    <td>${(index+offset)+1}</td>
+                    <td> ${contacttype.name}</td>
+                    <td class="d-flex">
+                        @can('edit-contacttype')
+                                <a class="btn btn-success" href="/contacttypes/${contacttype.id}/edit" class="font-medium text-blue-600  hover:underline">Edit</a>
+                        @endcan
+                        @can('delete-contacttype')
+                            <form action="/contacttypes/${contacttype.id}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger" type="submit"
+                                    class="font-medium text-red-600  hover:underline">Delete</button>
+                            </form>
+                        @endcan
+                    </td>
+                </tr>`
+                            $('#tableBody').append(htmlRow)
+                        });
 
 
-                function callTest(offset){
-                      $.ajax({
-                    url : `/contacttypes/?offset=${offset}`,
-                    type : 'GET',
-                    success : function(response){
-                        console.log(response)
+                        $('#paginationCount').html(
+                            `Showing ${offset + 1} to ${offset + response.contacttypes.length} out of ${@json($allContactTypesCount)} results`
+                        );
+
+                        if (offset + response.contacttypes.length >= @json($allContactTypesCount)) {
+                            $('#next').prop('disabled', true);
+                        } else {
+                            $('#next').prop('disabled', false);
+                        }
+
+                        offset > 0 ? $('#prev').prop('disabled', false) : $('#prev').prop('disabled', true);
                     },
-                    error:function(xhr,status,error){
+                    error: function(xhr, status, error) {
                         console.log(xhr)
                     }
                 })
-                }
+            }
+            $(document).ready(function() {
+                var offset = 0;
+                $('#prev').prop('disabled', true);
+                $('#next').click(function() {
+                    offset += 3;
+                    callNextPage(offset);
+                });
+
+                $('#prev').click(function() {
+                    offset -= 3;
+                    callNextPage(offset);
+                })
             });
         </script>
     @endpush

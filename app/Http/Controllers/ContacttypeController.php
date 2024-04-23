@@ -25,22 +25,15 @@ class ContacttypeController extends Controller
      */
     public function index(Request $request)
     {
-        // try {
-        //     $result = $this->contacttypeRepo->getAll();
-        //     return view('contacts.index',['contacttypes'=>$result]);
-        // } catch (\Exception $e) {
-        //     return response()->json(['result' => $e, 'success' => false]);
-        // }
-
         $limit = 3;
         $offset = $request->query('offset') ?? null;
-        if ($offset == null) {
+        if ($offset === null) {
             $totalRecords = Contacttype::count();
             $result = DB::select('SELECT * FROM contacttypes LIMIT ? ', [$limit]);
             return view('contacts.index', ['totalContacttypes' => $totalRecords, 'contacttypes' => $result]);
         } else {
             $result = DB::select('SELECT * FROM contacttypes LIMIT ? OFFSET ?', [$limit, $offset]);
-            return view('contacts.index', ['contacttypes' => $result,'currenOffset'=>$offset]);
+            return response()->json(['contacttypes'=>$result]);
         }
     }
 
