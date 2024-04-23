@@ -97,6 +97,7 @@ class UserController extends Controller
         Auth::logout();
         $request->session()->invalidate();
 
+        //to invalidate csrf token if any how obtained by hacker
         $request->session()->regenerateToken();
 
         return redirect()->route('login');

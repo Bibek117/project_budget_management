@@ -34,7 +34,7 @@ class RecordController extends Controller
     public function show($id){
         $record = $this->recordRepo->getById($id);
         $execDate = $record->execution_date;
-        $timeline = DB::select('SELECT * FROM timelines WHERE ? BETWEEN start_date AND end_date',[$execDate]);
+        $timeline =$this->recordRepo->getTimeline($execDate);
         $transactionsInRecord = Transaction::where('record_id',$id)->latest()->get();
         return view('transactions.show',['transactionsInRecord'=>$transactionsInRecord,'record'=>$record,'timeline'=>$timeline]);
     }
@@ -44,10 +44,7 @@ class RecordController extends Controller
     public function edit($id){
         $record = $this->recordRepo->getById($id);
         $transactionsInRecord = Transaction::where('record_id', $id)->latest()->get();
-        $timeline = Timeline::where('start_date', '<=', $record->execution_date)
-        ->where('end_date', '>=', $record->execution_date)
-        ->get();
-
+        $timeline = $this->recordRepo->getTimeline($record->execution_date);
         return view('transactions.update',['transactionsInRecord'=>$transactionsInRecord,'record'=>$record,'contacttypes'=>Contacttype::all(),'selectedTimeline'=>$timeline[0]]);
     }
 
@@ -59,33 +56,17 @@ class RecordController extends Controller
 
 
     //store record and transasctions
-
     public function store(StoreRecordRequest $request){
         $validatedData = $request;
         $transaction_creater_id = Auth::user()->id;
         $project_id = $validatedData->project_id;
-        $record = Record::create([
+        $record = $this->recordRepo->create([
             'user_id' => $transaction_creater_id,
             'project_id' => $project_id,
             'execution_date' => $validatedData->execution_date,
             'code' => $validatedData->code
         ]);
-        $data = [];
-        foreach ($request->transactions as $transaction) {
-            $data[] = [
-                'record_id' => $record->id,
-                'budget_id' => $transaction['budget_id'] ?? null,
-                'contact_id' => $transaction['contact_id'],
-                'desc' => $transaction['desc'],
-                'amount' => $transaction['amount'],
-                'COA' => $transaction['COA'],
-            ];
-        }
-        if (count($data) == 1) {
-            Transaction::create($data[0]);
-        } else {
-            Transaction::insert($data);
-        }
+        $this->recordRepo->updateOrCreateTransactions($request->toArray(),$record->id);
         return redirect()->route('record.index')->withSuccess('Record created successfully');
     }
 
@@ -93,21 +74,7 @@ class RecordController extends Controller
     //update record
     public function update(UpdateRecordRequest $request,$id){
          $this->recordRepo->updateById($id,['code'=>$request->code,'execution_date'=>$request->execution_date]);
-        foreach ($request->transactions as $transaction) {
-            Transaction::updateOrCreate(
-                //where
-                ['id'=>$transaction['id']??null],
-                //update or create
-                [
-                    'record_id'=>$id,
-                    'contact_id'=>$transaction['contact_id'],
-                    'budget_id'=>$transaction['budget_id']?? null,
-                    'COA' => $transaction['COA'],
-                    'amount' => $transaction['amount'],
-                    'desc'=> $transaction['desc']
-                    ]
-                );
-        }
+        $this->recordRepo->updateOrCreateTransactions($request->toArray(),$id);
         return redirect()->route('record.index')->withSuccess("Record updated successfully");
     }
 
