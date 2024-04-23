@@ -25,7 +25,7 @@ class StoreRecordRequest extends FormRequest
             'project_id' => 'required',
             'execution_date' => 'required|date',
             'code' => 'required|unique:records,code',
-            'transactions' => 'required|array',
+            'transactions' => 'required|array|min:2',
             'transactions.*.contact_id'=>'required',
             'transactions.*.desc' => 'required|string',
             'transactions.*.amount' => 'required|numeric',

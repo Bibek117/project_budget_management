@@ -67,6 +67,9 @@ class RecordController extends Controller
             'code' => $validatedData->code
         ]);
         $this->recordRepo->updateOrCreateTransactions($request->toArray(),$record->id);
+        if($request->ajax()){
+            return response()->json(['message'=>'Record created successfully','success'=>true]);
+        }
         return redirect()->route('record.index')->withSuccess('Record created successfully');
     }
 

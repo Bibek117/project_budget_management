@@ -7,7 +7,7 @@
 
    <div class="card">
     <div class="card-body">
-        <div id="success-message"></div>
+        <div id="success-msg"></div>
     </div>
    </div>
     <form  id="record_form">
@@ -67,7 +67,7 @@
                 </tr>
             </thead>
             <tbody id="table_body">
-                <tr>
+                <tr id="transaction_0">
                     <td>
                         <div class="form-group">
                             <select name="transactions[0][COA]" id="coa_0">
@@ -155,10 +155,10 @@
                         </div>
                     </td>
                     <td>
-                      
+                      <button class="btn btn-danger remove-budget-btn d-none" data-transaction-index="0"><i class="bi bi-trash3"></i></button>
                     </td>
                 </tr>
-                <tr>
+                <tr id="transaction_1">
                     <td>
                         <div class="form-group">
                             <select name="transactions[1][COA]" id="coa_1">
@@ -226,7 +226,7 @@
                         </div>
                     </td>
                     <td>
-                       
+                       <button class="btn btn-danger remove-budget-btn d-none" data-transaction-index="1"><i class="bi bi-trash3"></i></button>
                     </td>
                 </tr>
             </tbody>
@@ -244,6 +244,7 @@
     </form>
     @push('other-scripts')
         <script>
+            var numberOfRows = 2;
             var budgets = [];
             $(document).ready(function() {
                 //ajax fetch project timelines
@@ -328,6 +329,7 @@
                 var index = 1;
                 $('#add-more').click(function(e) {
                     e.preventDefault();
+                    numberOfRows++;
                     index++;
                     let transactionHtml = `<tr id="transaction_${index}">
                           <td>
@@ -397,9 +399,14 @@
                                 placeholder="" step="0.0001" >
                         </div>
                     </td>
-                     <td>  <button class="btn btn-danger remove-budget-btn" data-transaction-index="${index}"><i class="bi bi-trash3"></i></button></td>
+                     <td>  <button class="btn btn-danger remove-budget-btn d-none" data-transaction-index="${index}"><i class="bi bi-trash3"></i></button></td>
                 </tr>`;
                     $('#table_body').append(transactionHtml);
+
+                    if(numberOfRows > 2){
+                        $('.remove-budget-btn').removeClass('d-none');
+                    }
+
                     let budgetDropdown = $('#transaction_' + index).find('.budget_dropdown');
                     if (budgets.timeline.budget.length > 0) {
                         $.each(budgets.timeline.budget, function(index, budget) {
@@ -414,8 +421,12 @@
 
                 // Remove budget card when trash button is clicked
                 $(document).on('click', '.remove-budget-btn', function() {
+                    numberOfRows--;
                     var indexToRemove = $(this).data('transaction-index');
                     $('#transaction_' + indexToRemove).remove();
+                    if(numberOfRows <= 2){
+                        $('.remove-budget-btn').addClass('d-none');
+                    }
                 });
 
 
@@ -465,7 +476,7 @@
                         error: function(xhr, status, error) {
                             $.each(xhr.responseJSON.errors,function(index,error){
                                 // console.log(error[0])
-                                $('#success-message').append('<p class="text-danger">'+error[0]+'</p>')
+                                $('#success-msg').append('<p class="text-danger">'+error[0]+'</p>')
                             })
                             console.log(xhr.responseJSON.errors)
                         }
