@@ -1,4 +1,4 @@
-@extends('layouts.dashboardLayout')
+{{-- @extends('layouts.dashboardLayout')
 @section('content')
     <div class="p-9">
         <h1 class="text-center text-blue-600 text-[30px] mb-8 font-serif">Assign a contact type to the user</h1>
@@ -44,14 +44,7 @@
             @include('partials.goback')
         </form>
         <style>
-            select[multiple] {
-                height: auto;
-            }
-
-            select[multiple] option:checked {
-                background-color: #d6f7e1;
-                border-color: #48bb78;
-            }
+           
         </style>
         @push('other-scripts')
              <script>
@@ -71,4 +64,4 @@
         </script>
         @endpush
     </div>
-@endsection
+@endsection --}}

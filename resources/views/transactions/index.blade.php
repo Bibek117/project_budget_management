@@ -8,14 +8,14 @@
                     class="bi bi-plus-circle"></i></a></button>
     @endcan
 
-    <table class="table">
-        <tr class="thead-light">
+    <table class="table" id="recordDataTable">
+        <thead class="thead-light">
             <th>Record Code</th>
             <th>Created By</th>
             <th>Amount</th>
             <th>Project</th>
             <th>Actions</th>
-        </tr>
+        </thead>
         @forelse ($records as $record)
             <tr>
                 <td>{{ $record->code }}</td>
@@ -23,20 +23,22 @@
                 @php
                     $total = 0;
                     foreach ($record->transaction as $transaction) {
-                        if($transaction->amount > 0)
-                        $total += $transaction->amount;
+                        if ($transaction->amount > 0) {
+                            $total += $transaction->amount;
+                        }
                     }
                 @endphp
                 <td>{{ $total }}</td>
                 <td>{{ $record->project->title }}</td>
                 <td class="d-flex">
                     <button class="btn btn-info mr-2">
-                        <a href="{{route('record.show',$record->id)}}"><i class="bi text-white bi-eye"></i></a>
+                        <a href="{{ route('record.show', $record->id) }}"><i class="bi text-white bi-eye"></i></a>
                     </button>
                     <button class="btn btn-success mr-2">
-                        <a href="{{route('record.edit',$record->id)}}" class="text-light"> <i class="bi bi-pencil-square "></i></a> 
+                        <a href="{{ route('record.edit', $record->id) }}" class="text-light"> <i
+                                class="bi bi-pencil-square "></i></a>
                     </button>
-                     <form action="{{ route('record.destroy', $record->id) }}" method="post">
+                    <form action="{{ route('record.destroy', $record->id) }}" method="post">
                         @csrf
                         @method('DELETE')
                         <button class="btn btn-danger">
@@ -49,16 +51,12 @@
             </tr>
         @endforelse
     </table>
+   
 @endsection
-
-
-
-
-
-
-
-
-
-
-
-
+@push('other-scripts')
+    <script>
+        $(document).ready(function(){
+            $('#recordDataTable').DataTable();
+        })
+    </script>
+@endpush

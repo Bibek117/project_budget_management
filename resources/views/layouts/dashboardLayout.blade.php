@@ -12,9 +12,9 @@
          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
      {{-- icons --}}
      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-       <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.dataTables.css" />
+     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.dataTables.css" />
 
-   
+
 
 
      {{-- fonts --}}
@@ -31,7 +31,20 @@
          .active {
              color: white;
              background-color: rgb(49, 189, 49);
+         }
 
+         div.dt-container select.dt-input {
+             width: 60px;
+         }
+
+         select[multiple] {
+             height: 300px;
+         }
+
+         select[multiple] option:checked {
+             background-color: #d6f7e1;
+             border-color: #48bb78;
+             padding:2px;
          }
      </style>
 
@@ -48,30 +61,30 @@
                          <span class="self-center text-xl  sm:text-2xl whitespace-nowrap">Manage</span>
                      </a>
                  </div>
-                     <div class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Hello {{ Auth::user()->username ?? 'Unknown user' }} |
-                                <i class="bi bi-person-circle text-dark ml-2 text-[20px]"></i>
-                            </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
-                                   <i class="bi bi-person-circle  mr-2 text-gray-400"></i>
-                                    <span class="text-sm">Profile</span>
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                   <i class="bi bi-gear  mr-2 text-gray-400"></i>
-                                  <span class="text-sm">Settings</span>
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{{route('logout') }}" >
-                                    <i class="bi bi-box-arrow-right mr-2 text-gray-400"></i>
-                                     <span class="text-sm">Logout</span>
-                                </a>
-                            </div>
-                        </div>
+                 <div class="nav-item dropdown no-arrow">
+                     <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button"
+                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                         Hello {{ Auth::user()->username ?? 'Unknown user' }} |
+                         <i class="bi bi-person-circle text-dark ml-2 text-[20px]"></i>
+                     </a>
+                     <!-- Dropdown - User Information -->
+                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                         aria-labelledby="userDropdown">
+                         <a class="dropdown-item" href="#">
+                             <i class="bi bi-person-circle  mr-2 text-gray-400"></i>
+                             <span class="text-sm">Profile</span>
+                         </a>
+                         <a class="dropdown-item" href="#">
+                             <i class="bi bi-gear  mr-2 text-gray-400"></i>
+                             <span class="text-sm">Settings</span>
+                         </a>
+                         <div class="dropdown-divider"></div>
+                         <a class="dropdown-item" href="{{ route('logout') }}">
+                             <i class="bi bi-box-arrow-right mr-2 text-gray-400"></i>
+                             <span class="text-sm">Logout</span>
+                         </a>
+                     </div>
+                 </div>
              </div>
          </div>
      </nav>
@@ -174,7 +187,7 @@
          @yield('content')
      </div>
      {{-- bootstrap --}}
-       <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
          integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
      </script>
@@ -182,9 +195,9 @@
          integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous">
      </script>
 
-       {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
      <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
-       @stack('other-scripts')
+     @stack('other-scripts')
  </body>
 
  </html>

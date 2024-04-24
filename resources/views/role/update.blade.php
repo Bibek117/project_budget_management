@@ -31,18 +31,10 @@
             <button class="btn btn-success">Save the edits</button>
             @include('partials.goback')
         </form>
-        <style>
-            select[multiple] {
-                height: 300px;
-            }
-
-            select[multiple] option:checked {
-                background-color: #d6f7e1;
-                border-color: #48bb78;
-            }
-        </style>
-
-        <script>
+    </div>
+@endsection
+@push('other-scripts')
+ <script>
             $(document).ready(function() {
                 $('select[multiple]').mousedown(function(e) {
                     e.preventDefault();
@@ -57,7 +49,5 @@
                 });
             });
         </script>
-
-
-    </div>
-@endsection
+    
+@endpush

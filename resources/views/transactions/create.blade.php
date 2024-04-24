@@ -48,10 +48,7 @@
                     <label for="execution_date">Transactions performed date</label><br>
                     <input type="date" name="execution_date" id="execution_date">
                 </div>
-
-
             </div>
-
         </div>
 
         {{-- form --}}
@@ -428,10 +425,7 @@
                         $('.remove-budget-btn').addClass('d-none');
                     }
                 });
-
-
-
-
+                
                 $('#table_body').on('input', '.net_amount', function() {
                     calculateNetAmount();
                 });

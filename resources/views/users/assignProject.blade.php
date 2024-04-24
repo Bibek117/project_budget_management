@@ -1,4 +1,4 @@
-@extends('layouts.dashboardLayout')
+{{-- @extends('layouts.dashboardLayout')
 @section('content')
     <div class="p-9">
         <h1 class="text-center text-blue-600 text-[30px] mb-8 font-serif">Assign a project to user</h1>
@@ -65,4 +65,4 @@
         </script>
         @endpush
     </div>
-@endsection
+@endsection --}}

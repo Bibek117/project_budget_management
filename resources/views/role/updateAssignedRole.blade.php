@@ -34,18 +34,9 @@
             </div>
 
         </div>
-    </div>
-        <style>
-          select[multiple] {
-                height: auto;
-            }
-        
-              select[multiple] option:checked {
-                background-color: #d6f7e1;
-                border-color: #48bb78;
-            }
-    </style>
-      @push('other-scripts')
+    </div>   
+@endsection
+   @push('other-scripts')
              <script>
             $(document).ready(function() {
                 $('select[multiple]').mousedown(function(e) {
@@ -62,4 +53,3 @@
             });
         </script>
         @endpush
-@endsection

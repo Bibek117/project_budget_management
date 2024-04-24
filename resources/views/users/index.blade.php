@@ -6,7 +6,8 @@
     @endcan
     @if (session('success'))
         <p class="text-success">{{ session('success') }}</p>
-    @endif
+    @endif 
+        <p id="successMsg" class="text-success"></p>
     <table class="table" id="userDataTable">
         <thead class="thead-light">
             <tr>
@@ -22,29 +23,39 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $user->username }}</td>
                     <td>{{ $user->email }}</td>
-                    <td>
+                    <td class="d-flex">
+                        <button class="btn btn-info mr-2">
+                            <a href={{ route('user.show', $user->id) }}
+                                class="font-medium text-yellow-600  hover:underline"><i
+                                    class="bi text-white bi-eye"></i></a>
+                        </button>
+                        @can('edit-user')
+                            <button class="btn btn-success mr-2">
+                                <a class="font-medium text-blue-600  hover:underline userEdit" data-target="#userEditModal"
+                                    data-id="{{ $user->id }}"> <i class="bi bi-pencil-square "></i></a>
+                            </button>
+                        @endcan
                         <form action={{ route('user.destroy', $user->id) }} method="post">
                             @csrf
                             @method('DELETE')
-                            @can('assign-contact')
+                            {{-- @can('assign-contact')
                                 <a href={{ route('user.assign.ctype.create', $user->id) }}
                                     class="font-medium text-green-600  hover:underline">Assign Contact Type</a> |
-                            @endcan
-                            @can('assign-project-to-user')
+                            @endcan --}}
+                            {{-- @can('assign-project-to-user')
                                 <a href={{ route('user.assign.project.create', $user->id) }}
                                     class="font-medium text-green-600  hover:underline">Assign Project</a> |
-                            @endcan
+                            @endcan --}}
 
-                            <a href={{ route('user.show', $user->id) }}
-                                class="font-medium text-yellow-600  hover:underline">Show</a>
-
-                            @can('edit-user')
-                                {{-- href={{ route('user.edit', $user->id) }} --}}
+                            {{-- @can('edit-user')
+                                href={{ route('user.edit', $user->id) }} 
                                 | <a class="font-medium text-blue-600  hover:underline userEdit" data-toggle="modal"
                                     data-target="#userEditModal" data-id="{{ $user->id }}">Edit</a>
-                            @endcan
+                            @endcan --}}
+
                             @can('delete-user')
-                                | <button type="submit" class="font-medium text-red-600  hover:underline">Delete</button>
+                                <button class="btn btn-danger" type="submit" class="font-medium text-red-600  hover:underline">
+                                    <i class="bi bi-trash3-fill"></i></button>
                             @endcan
 
                         </form>
@@ -59,8 +70,7 @@
     </table>
 
     <!-- Modal -->
-    <div class="modal fade" id="userEditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="userEditModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -73,6 +83,7 @@
                     <form id="editForm" method="post">
                         @csrf
                         @method('PUT')
+                        <input type="hidden" id="user_id" value="">
                         <div class="form-group">
                             <label for="username">Username</label>
                             <input type="text" class="form-control" id="username" name="username">
@@ -85,42 +96,32 @@
                             <label for="phone">Phone Number</label>
                             <input type="tel" class="form-control" id="phone" name="phone">
                         </div>
-                        <div class="form-group">
-                            <label for="assignProject">Select projects to assign to user</label>
-                            <select class="form-control" name="project_id[]" multiple id="assignProject">
-                               
-                            </select>
-                        </div>
-                         <div class="form-group">
-                            <label for="assignContact">Select contacttypes to assign to user</label>
-                            <select class="form-control" name="contacttype_id[]" multiple id="assignContact">
-                                
-                            </select>
-                        </div>
+                        @can('assign-project-to-user')
+                            <div class="form-group">
+                                <label for="assignProject">Select projects to assign to user</label>
+                                <select class="form-control" name="project_id[]" multiple id="assignProject">
+                                </select>
+                            </div>
+                        @endcan
 
-
+                        @can('assign-contact')
+                            <div class="form-group">
+                                <label for="assignContact">Select contacttypes to assign to user</label>
+                                <select class="form-control" name="contacttype_id[]" multiple id="assignContact">
+                                </select>
+                            </div>
+                        @endcan
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" id="userModalSubmit">Save changes</button>
                 </div>
             </div>
         </div>
     </div>
 
     {{-- {{ $users->links() }} --}}
-
-    <style>
-        select[multiple] {
-            height: auto;
-        }
-
-        select[multiple] option:checked {
-            background-color: #d6f7e1;
-            border-color: #48bb78;
-        }
-    </style>
 @endsection
 @push('other-scripts')
     <script>
@@ -128,19 +129,22 @@
 
             $('#userDataTable').DataTable();
             $('.userEdit').click(function() {
-                let userId = $(this).data('id');
+                var userId = $(this).data('id');
                 $.ajax({
                     url: `users/${userId}/edit`,
                     type: "GET",
                     success: function(response) {
                         $('#username').val(response.user.username);
                         $('#email').val(response.user.email);
+                        $('#phone').val(response.user.phone);
+                        $('#user_id').val(userId)
 
-                        console.log(response.assignedContacts);
+                        // console.log(response.assignedContacts);
                         let selectContact = $('#assignContact');
                         let selectProject = $('#assignProject');
 
-                        // selectBox.empty(); // Clear existing options
+                        selectContact.empty();
+                        selectProject.empty();
                         $.each(response.projects, function(index, project) {
                             let selected = response.assignedProjects.includes(project
                                 .id) ? 'selected' : '';
@@ -149,24 +153,51 @@
                             );
                         });
 
-                        $.each(response.contacttypes,function(index,contacttype){
-                            let selected = response.assignedContacts.includes(contacttype.id) ? "selected" : "";
-                            selectContact.append(`<option value="${contacttype.id}" ${selected}> ${contacttype.name}</option> `)
-                        })
+                        $.each(response.contacttypes, function(index, contacttype) {
+                            let selected = response.assignedContacts.includes(
+                                contacttype.id) ? "selected" : "";
+                            selectContact.append(
+                                `<option value="${contacttype.id}" ${selected}> ${contacttype.name}</option> `
+                            )
+                        });
 
-                        // $('#editForm').append(assignProjectHtml);
-                        console.log(response.user.username);
+                        $('#userEditModal').modal('show');
+                        // console.log(response.user.username);
                     },
                     error: function(xhr, status, errror) {
                         console.log(xhr);
                     }
                 })
-            })
+            });
+
+               $('#userModalSubmit').click(function() {
+            
+                            let editForm = $('#editForm');
+                            let userId = $('#user_id').val();
+                            $.ajax({
+                                url: `/users/${userId}`,
+                                type: "POST",
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                data: editForm.serialize(),
+                                success : function(response){
+                                    //console.log(response)
+                                    $('#successMsg').html(response.message);
+                                    $('#userEditModal').modal('hide');
+
+                                },
+                                error : function(xhr,status,error){
+                                    console.log(xhr)
+                                }
+                            })
+                        })
+
             $('#userEditModal').on('shown.bs.modal', function() {
                 $('#username').trigger('focus');
-
-
             })
+
+
 
             $('select[multiple]').mousedown(function(e) {
                 e.preventDefault();
