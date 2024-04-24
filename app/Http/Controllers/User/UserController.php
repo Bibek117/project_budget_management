@@ -41,8 +41,13 @@ class UserController extends Controller
     }
 
     //user edit
-    public function edit(String $id){
+    public function edit(Request $req,String $id){
+        $assignedContacts = DB::table('contacts')->where('user_id', $id)->pluck('contacttype_id')->toArray();
+        $asssignedProjects = DB::table('project_user')->where('user_id', $id)->pluck('project_id')->toArray();
         $user = $this->userRepo->getById($id);
+        if($req->ajax()){
+            return response()->json(['user'=>$user, 'contacttypes' => Contacttype::get(),'assignedProjects'=>$asssignedProjects,'assignedContacts'=>$assignedContacts, 'projects' => Project::without(['timeline'])->get()]);
+        }
         return view('users.update',['user'=>$user]);
     }
 
