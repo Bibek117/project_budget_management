@@ -59,7 +59,7 @@
         <script>
             function callNextPage(offset) {
                 $.ajax({
-                    url: `/contacttypes/?offset=${offset}`,
+                    url: `/contacttype/?offset=${offset}`,
                     type: 'GET',
                     success: function(response) {
                         $('#tableBody').empty();

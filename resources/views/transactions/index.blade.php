@@ -3,8 +3,8 @@
     @if (session('success'))
         <p>{{ session('success') }}</p>
     @endif
-    @can('create-transaction')
-        <button class="btn btn-primary mb-3"><a class="text-white" href="{{ route('transaction.create') }}">New Record<i
+    @can('create-record')
+        <button class="btn btn-primary mb-3"><a class="text-white" href="{{ route('record.create') }}">New Record<i
                     class="bi bi-plus-circle"></i></a></button>
     @endcan
 
@@ -31,20 +31,28 @@
                 <td>{{ $total }}</td>
                 <td>{{ $record->project->title }}</td>
                 <td class="d-flex">
+                    @can('view-record') 
                     <button class="btn btn-info mr-2">
                         <a href="{{ route('record.show', $record->id) }}"><i class="bi text-white bi-eye"></i></a>
                     </button>
+                    @endcan
+                    @can('edit-record') 
                     <button class="btn btn-success mr-2">
                         <a href="{{ route('record.edit', $record->id) }}" class="text-light"> <i
                                 class="bi bi-pencil-square "></i></a>
                     </button>
-                    <form action="{{ route('record.destroy', $record->id) }}" method="post">
+                    @endcan
+                   
+                    @can('delete-record')
+                        <form action="{{ route('record.destroy', $record->id) }}" method="post">
                         @csrf
                         @method('DELETE')
                         <button class="btn btn-danger">
                             <i class="bi bi-trash3-fill"></i>
                         </button>
                     </form>
+                    @endcan
+                    
                 </td>
             @empty
                 <td colspan="4">No records found</td>

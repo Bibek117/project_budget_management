@@ -13,7 +13,6 @@ class TimelineController extends Controller
     private $timelineRepo;
     public function __construct(TimelineRepository $timelineRepo){
         $this->timelineRepo = $timelineRepo;
-        $this->middleware('auth');
         $this->middleware('permission:create-timeline|edit-timeline|delete-timeline|view-timeline', ['only' => ['show', 'index']]);
         $this->middleware('permission:create-timeline', ['only' => ['store', 'createTimeline']]);
         $this->middleware('permission:edit-timeline', ['only' => ['update', 'edit']]);
@@ -39,7 +38,7 @@ class TimelineController extends Controller
         return response()->json(['timeline' => $result]);
     }
   
-    public function createTimeline(){
+    public function create(){
         return view('projects.timelines.create',['projects'=>Project::get()]);
     }
 
@@ -55,21 +54,8 @@ class TimelineController extends Controller
      */
     public function store(StoreTimelineRequest $request)
     {
-        // dd($request);
-        $project_id = $request->project_id;
-        $timelineData = [];
-
-        foreach ($request->timelines as $timeline) {
-            $timelineData[] = [
-                'project_id' => $project_id,
-                'title' => $timeline['title'],
-                'start_date' => $timeline['start_date'],
-                'end_date' => $timeline['end_date']
-            ];
-        }
-
-        Timeline::insert($timelineData);
-
+       
+        $this->timelineRepo->create($request);
         if ($request->ajax()) {
             return response()->json(['message' => 'Timelines created successfully', 'success' => true]);
         }
@@ -98,7 +84,6 @@ class TimelineController extends Controller
     {
        
             $result = $this->timelineRepo->updateById($id, $request->validated());
-
             if($request->ajax()){
                 return response()->json(['message'=>'Updated', 'success'=>true]);
             }

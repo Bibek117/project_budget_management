@@ -22,4 +22,8 @@ class Transaction extends Model
     public function budget(){
         return $this->belongsTo(Budget::class,'budget_id');
     }
+
+    public function accountsubcat(){
+        return $this->belongsTo(AccountSubCategory::class,'coa_id');
+    }
 }

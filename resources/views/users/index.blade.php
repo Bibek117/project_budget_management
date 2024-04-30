@@ -38,21 +38,6 @@
                         <form action={{ route('user.destroy', $user->id) }} method="post">
                             @csrf
                             @method('DELETE')
-                            {{-- @can('assign-contact')
-                                <a href={{ route('user.assign.ctype.create', $user->id) }}
-                                    class="font-medium text-green-600  hover:underline">Assign Contact Type</a> |
-                            @endcan --}}
-                            {{-- @can('assign-project-to-user')
-                                <a href={{ route('user.assign.project.create', $user->id) }}
-                                    class="font-medium text-green-600  hover:underline">Assign Project</a> |
-                            @endcan --}}
-
-                            {{-- @can('edit-user')
-                                href={{ route('user.edit', $user->id) }} 
-                                | <a class="font-medium text-blue-600  hover:underline userEdit" data-toggle="modal"
-                                    data-target="#userEditModal" data-id="{{ $user->id }}">Edit</a>
-                            @endcan --}}
-
                             @can('delete-user')
                                 <button class="btn btn-danger" type="submit" class="font-medium text-red-600  hover:underline">
                                     <i class="bi bi-trash3-fill"></i></button>
@@ -87,14 +72,17 @@
                         <div class="form-group">
                             <label for="username">Username</label>
                             <input type="text" class="form-control" id="username" name="username">
+                            <p class="text-danger text-sm" id="error_username"></p>
                         </div>
                         <div class="form-group">
                             <label for="email">Email address</label>
                             <input type="email" class="form-control" name="email" id="email">
+                             <p class="text-danger text-sm" id="error_email"></p>
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone Number</label>
                             <input type="tel" class="form-control" id="phone" name="phone">
+                             <p class="text-danger text-sm" id="error_phone"></p>
                         </div>
                         @can('assign-project-to-user')
                             <div class="form-group">
@@ -128,10 +116,12 @@
         $(document).ready(function() {
 
             $('#userDataTable').DataTable();
+
+            
             $('.userEdit').click(function() {
                 var userId = $(this).data('id');
                 $.ajax({
-                    url: `users/${userId}/edit`,
+                    url: `user/${userId}/edit`,
                     type: "GET",
                     success: function(response) {
                         $('#username').val(response.user.username);
@@ -175,7 +165,7 @@
                             let editForm = $('#editForm');
                             let userId = $('#user_id').val();
                             $.ajax({
-                                url: `/users/${userId}`,
+                                url: `/user/${userId}`,
                                 type: "POST",
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -189,6 +179,16 @@
                                 },
                                 error : function(xhr,status,error){
                                     console.log(xhr)
+                                    if(xhr.responseJSON.errors?.username){
+                                        console.log(xhr.responseJSON.errors.username[0])
+                                        $('#error_username').html(xhr.responseJSON.errors.username[0]);
+                                    }
+                                     if(xhr.responseJSON.errors?.email){
+                                        $('#error_email').html(xhr.responseJSON.errors.username[0]);
+                                    }
+                                     if(xhr.responseJSON.errors?.phone){
+                                        $('#error_phone').html(xhr.responseJSON.errors.phone[0]);
+                                    }
                                 }
                             })
                         })

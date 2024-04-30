@@ -8,6 +8,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ContacttypeController;
 use App\Http\Controllers\RecordController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TransactionController;
 
 /*
@@ -21,118 +22,74 @@ use App\Http\Controllers\TransactionController;
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard');
-})->middleware('auth')->name('dashbaord');
 
 
 
-
-
-
-Route::resources(['roles' => RoleController::class]);
-
-Route::get('/assign-role', [RoleController::class, 'assign'])->name('roles.assign');
-Route::get('/edit-assigned-role/{id}', [RoleController::class, 'editAddAssignedRole'])->name('roles.editAssign');
-Route::post('/edit-assigned-role', [RoleController::class, 'updateAssignedRoles'])->name('roles.updateAssign');
-
-
-//users
 Route::get('/login', [UserController::class, 'login'])->name('login');
 Route::post('/login', [UserController::class, 'authenticate'])->name('signup');
-Route::get('/logout', [UserController::class, 'logout'])->name('logout');
-Route::get('/user-create', [UserController::class, 'create'])->name('user.create');
-Route::post('/users', [UserController::class, 'register'])->name('user.register');
-Route::controller(UserController::class)->prefix('users')->group(function () {
-    Route::get('/', 'index')->name('user.index');
-    Route::get('/{id}', 'show')->name('user.show');
-    Route::put('/{id}', 'update')->name('user.update');
-    Route::get('/{id}/edit', 'edit')->name('user.edit');
-    Route::delete('/{id}', 'destroy')->name('user.destroy');
-    Route::get('/assign-project-user/{id}', 'assignProjectToUserForm')->name('user.assign.project.create');
-    Route::post('/assign-project-user', 'assignProjectToUser')->name('user.assign.project.store');
-    Route::get('/assign-contacttype-user/{id}', 'assignContactTypeToUserForm')->name('user.assign.ctype.create');
-    Route::post('/assign-contacttype-user', 'assignContactTypeToUser')->name('user.assign.ctype.store');
+Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        return view('dashboard');
+    })->name('dashbaord');
+
+
+    //roles and permissons
+    Route::controller(RoleController::class)->prefix('roles')->group(function () {
+        Route::get('/edit-assigned-role/{id}', 'editAddAssignedRole')->name('roles.editAssign');
+        Route::post('/edit-assigned-role', 'updateAssignedRoles')->name('roles.updateAssign');
+        Route::get('/assign-role','assign')->name('role.assign');
+    });
+    Route::resource('roles', RoleController::class);
+  
+
+    Route::get('/login', [UserController::class, 'login'])->name('login')->withoutMiddleware('auth');
+    Route::post('/login', [UserController::class, 'authenticate'])->name('signup')->withoutMiddleware('auth');
+    //users
+    Route::resource('user',UserController::class);
+    Route::controller(UserController::class)->prefix('users')->group(function(){
+        Route::get('/logout','logout')->name('user.logout');
+        Route::post('/register',  'register')->name('user.register');
+        Route::get('/assign-project-user/{id}', 'assignProjectToUserForm')->name('user.assign.project.create');
+        Route::post('/assign-project-user', 'assignProjectToUser')->name('user.assign.project.store');
+        Route::get('/assign-contacttype-user/{id}', 'assignContactTypeToUserForm')->name('user.assign.ctype.create');
+        Route::post('/assign-contacttype-user', 'assignContactTypeToUser')->name('user.assign.ctype.store');
+        Route::get('/ajaxUsers/{id}', 'getUsersAjax')->name('contact.ajax');
+    });
+
+    //projects
+    Route::resource('project',ProjectController::class);
+        Route::controller(ProjectController::class)->prefix('projects')->group(function () {
+        Route::get('/ajaxSingleProject/{id}', 'getSingleAjax')->name('project.ajax');
+        Route::get('/assign-user-project/{id}', 'assignUserToProjectForm')->name('project.assign.user.create');
+        Route::post('/assign-user-project', 'assignUserToProject')->name('project.assign.user.store');
+    });
+
+    //timelines
+    Route::resource('timeline',TimelineController::class);
+    Route::get('/timelines/ajaxSingleTimeline/{id}', [TimelineController::class, 'getSingleAjax'])->name('timeline.ajax');
+
+    //budgets
+    Route::resource('budget',BudgetController::class);
+
+    //contacttypes
+    Route::resource('contacttype',ContacttypeController::class);
+
+    //records
+    Route::resource('record',RecordController::class);
+
+    
+    //Reports 
+    Route::controller(ReportController::class)->prefix('reports')->group(function () {
+        Route::get('/', 'index')->name('report.index');
+        Route::get('/recordDetail', 'recordDetailForm')->name('report.recordDetailCreate');
+        Route::post('/recordDetail','recordDetail')->name('report.recordDetailShow');
+        // Route::get('/contactPayableReceivable','contactPayableReceivableForm')->name('report.contactPayableReceivableForm');
+        // Route::post('/contactPayableReceivable', 'contactPayableReceivable')->name('report.contactPayableReceivable');
+    });
+    //transactions
+    Route::resource('transaction',TransactionController::class)->only(['create','show','destroy']);
 });
 
 
-//projects
-
-Route::controller(ProjectController::class)->prefix('projects')->group(function () {
-    Route::get('/', 'index')->name('project.index');
-    Route::get('/create', 'createProject')->name('project.create');
-    Route::post('/', 'store')->name('project.store');
-    Route::get('/{id}', 'show')->name('project.show');
-    Route::put('/{id}', 'update')->name('project.update');
-    Route::delete('/{id}', 'destroy')->name('project.destroy');
-    Route::get('/{id}/edit', 'edit')->name('project.edit');
-    Route::get('/ajaxSingleProject/{id}', 'getSingleAjax')->name('project.ajax');
-    Route::get('/assign-user-project/{id}', 'assignUserToProjectForm')->name('project.assign.user.create');
-    Route::post('/assign-user-project', 'assignUserToProject')->name('project.assign.user.store');
-});
 
 
-//projects timeline
-Route::controller(TimelineController::class)->prefix('timelines')->group(function () {
-    // Route::get('/', 'index');
-
-    Route::get('/create', 'createTimeline')->name('timeline.create');
-    Route::post('/', 'store')->name('timeline.store');
-    // Route::get('/{id}', 'show');
-    Route::get('/{id}/edit', 'edit')->name('timeline.edit');
-    Route::put('/{id}', 'update')->name('timeline.update');
-    Route::delete('/{id}', 'destroy')->name('timeline.destroy');
-    Route::get('/ajaxSingleTimeline/{id}', 'getSingleAjax')->name('timeline.ajax');
-});
-
-
-//projects budget
-Route::controller(BudgetController::class)->prefix('budgets')->group(function () {
-    Route::get('/', 'index');
-    Route::post('/','store')->name('budget.store');
-    Route::get('/create', 'createBudget')->name('budget.create');
-    Route::get('/{id}', 'show');
-    Route::get('/{id}/edit', 'edit')->name('budget.edit');
-    Route::put('/{id}', 'update')->name('budget.update');
-    Route::delete('/{id}', 'destroy')->name('budget.destroy');
-});
-
-//contact types
-Route::controller(ContacttypeController::class)->prefix('contacttypes')->group(function () {
-    Route::get('/', 'index')->name('contacttype.index');
-    Route::get('/create', 'create')->name('contacttype.create');
-    Route::post('/', 'store')->name('contacttype.store');
-    Route::get('/{id}/edit', 'edit')->name('contacttype.edit');
-    Route::get('/{id}', 'show')->name('contacttype.show');
-    Route::put('/{id}', 'update')->name('contacttype.update');
-    Route::delete('/{id}', 'destroy')->name('contacttype.destroy');
-});
-
-//transactions
-Route::controller(TransactionController::class)->prefix('transactions')->group(function () {
-    // Route::get('/', 'index')->name('transaction.index');
-    Route::get('/create','create')->name('transaction.create');
-    // Route::post('/', 'store')->name('transaction.store');
-    Route::get('/{id}', 'show')->name('transaction.show');
-
-    //todo
-    // Route::put('/', 'update')->name('transaction.update');
-    Route::delete('/{id}', 'destroy')->name('transaction.destroy');
-
-    //ajax requests
-    Route::get('/ajaxUsers/{id}', 'getUsersAjax')->name('contact.ajax');
- 
-});
-
-
-//records
-Route::controller(RecordController::class)->prefix('records')->group(function(){
-    Route::get('/','index')->name('record.index');
-    Route::post('/','store')->name('record.store');
-    Route::get('/{id}','show')->name('record.show');
-    Route::get('/{id}/edit','edit')->name('record.edit');
-    //todo
-    Route::put('/{id}','update')->name('record.update');
-
-    Route::delete('/{id}','destroy')->name('record.destroy');
-});

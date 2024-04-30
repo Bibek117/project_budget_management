@@ -1,8 +1,5 @@
 @extends('layouts.dashboardLayout')
 @section('content')
-    {{-- @php
-        dd($projects->timeline[0]->budgets);
-    @endphp --}}
     <h3 class="text-center">Create record</h3>
 
    <div class="card">
@@ -64,168 +61,10 @@
                 </tr>
             </thead>
             <tbody id="table_body">
-                <tr id="transaction_0">
-                    <td>
-                        <div class="form-group">
-                            <select name="transactions[0][COA]" id="coa_0">
-                                <optgroup label="Receivables">
-                                    <option value="receive-grant">Grants and Funding</option>
-                                    <option value="receive-donation">Donations and Contributions</option>
-                                    <option value="receive-pledge">Pledges and Commitments</option>
-                                    <option value="receive-membership">Membership and Subscriptions</option>
-                                    <option value="receive-program">Program Fees and Sales</option>
-                                </optgroup>
-                                <optgroup label="Payables">
-                                    <option value="payable-salary">Salaries and Compensation</option>
-                                    <option value="payable-account">Accounts Payable</option>
-                                    <option value="payable-rent">Rent and Leases</option>
-                                    <option value="payable-utility">Utilities and Services</option>
-                                    <option value="payable-tax">Taxes and Duties</option>
-                                </optgroup>
-                                <optgroup label="Bank/Cash">
-                                    <option value="bc-bank">Bank Accounts</option>
-                                    <option value="bc-cash">Cash in Hand</option>
-                                </optgroup>
-                                <optgroup label="Expenses">
-                                    <option value="expense-program">Program Costs and Services</option>
-                                    <option value="expense-fundandmarket">Fundraising and Marketing</option>
-                                    <option value="expense-administrative">Administrative and Overhead</option>
-                                    <option value="expense-advocacy">Advocacy and Awareness</option>
-                                    <option value="expense-grantandproject">Grants and Projects</option>
-                                </optgroup>
-                            </select>
-
-                        </div>
-                    </td>
-                    <td>
-                        {{-- <div class="form-group">
-                            <select class="contacttype" id="contacttype_0" name="transactions[0][contacttype_id]">
-                                <option value="" disabled selected>Contact types</option>
-                                @foreach ($contacttypes as $contacttype)
-                                    <option value="{{ $contacttype->id }}" disabled selected>{{ $contacttype->name }}</option>
-                                @endforeach
-                            </select>
-                        </div> --}}
-                        {{-- @php
-                            dd($contacttypes[0]->contact[0]->user->username)
-                        @endphp --}}
-                        {{-- @foreach ($contacttypes as $contacttype)
-                         <p>{{$contacttype->name}}</p>
-                                     @foreach ($contacttype->contact as $contact)
-                                      
-                                             <p>{{$contact->user->username}}</p>
-                                         
-                                     @endforeach
-                                @endforeach --}}
-                        <div class="form-group">
-                            <select class="contacttype" id="contacttype_0" name="transactions[0][contact_id]">
-                                <option disabled selected>Contact types</option>
-                                @foreach ($contacttypes as $contacttype)
-                                    <optgroup label="{{ $contacttype->name }}">
-                                        @forelse ($contacttype->contact as $contact)
-                                            <option value="{{ $contact->id }}">{{ $contact->user->username }}</option>
-                                        @empty
-                                            <option disabled>No contacts available</option>
-                                        @endforelse
-                                    </optgroup>
-                                @endforeach
-                            </select>
-                        </div>
-
-                    </td>
-                    <td>
-                        <div class="ml-4 form-group">
-                            <select name="transactions[0][budget_id]" id="budge_0" class="budget_dropdown">
-                                <option value="" disabled selected>Budgets</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <textarea name="transactions[0][desc]" id="description_0" rows="2" class="form-control"></textarea>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <input type="number" class="form-control net_amount" step="0.0001"
-                                name="transactions[0][amount]" id="amount_0">
-                        </div>
-                    </td>
-                    <td>
-                      <button class="btn btn-danger remove-budget-btn d-none" data-transaction-index="0"><i class="bi bi-trash3"></i></button>
-                    </td>
-                </tr>
-                <tr id="transaction_1">
-                    <td>
-                        <div class="form-group">
-                            <select name="transactions[1][COA]" id="coa_1">
-                               <optgroup label="Receivables">
-                                    <option value="receive-grant">Grants and Funding</option>
-                                    <option value="receive-donation">Donations and Contributions</option>
-                                    <option value="receive-pledge">Pledges and Commitments</option>
-                                    <option value="receive-membership">Membership and Subscriptions</option>
-                                    <option value="receive-program">Program Fees and Sales</option>
-                                </optgroup>
-                                <optgroup label="Payables">
-                                    <option value="payable-salary">Salaries and Compensation</option>
-                                    <option value="payable-account">Accounts Payable</option>
-                                    <option value="payable-rent">Rent and Leases</option>
-                                    <option value="payable-utility">Utilities and Services</option>
-                                    <option value="payable-tax">Taxes and Duties</option>
-                                </optgroup>
-                                <optgroup label="Bank/Cash">
-                                    <option value="bc-bank">Bank Accounts</option>
-                                    <option value="bc-cash">Cash in Hand</option>
-                                </optgroup>
-                                <optgroup label="Expenses">
-                                    <option value="expense-program">Program Costs and Services</option>
-                                    <option value="expense-fundandmarket">Fundraising and Marketing</option>
-                                    <option value="expense-administrative">Administrative and Overhead</option>
-                                    <option value="expense-advocacy">Advocacy and Awareness</option>
-                                    <option value="expense-grantandproject">Grants and Projects</option>
-                                </optgroup>
-                            </select>
-
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <select class="contacttype" id="contacttype_1" name="transactions[1][contact_id]">
-                                <option disabled selected>Contact types</option>
-                                @foreach ($contacttypes as $contacttype)
-                                    <optgroup label="{{ $contacttype->name }}">
-                                        @forelse ($contacttype->contact as $contact)
-                                            <option value="{{ $contact->id }}">{{ $contact->user->username }}</option>
-                                        @empty
-                                            <option disabled>No contacts available</option>
-                                        @endforelse
-                                    </optgroup>
-                                @endforeach
-                            </select>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="ml-4 form-group">
-                            <select name="transactions[1][budget_id]" id="budget_1" class="budget_dropdown">
-                                <option value="" disabled selected>Budgets</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <textarea name="transactions[1][desc]" id="description_1" rows="2" class="form-control"></textarea>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <input type="number" class="form-control net_amount" name="transactions[1][amount]"
-                                id="amount_1" step="0.0001">
-                        </div>
-                    </td>
-                    <td>
-                       <button class="btn btn-danger remove-budget-btn d-none" data-transaction-index="1"><i class="bi bi-trash3"></i></button>
-                    </td>
-                </tr>
+                @for ($i=0;$i<2;$i++)
+                    @include('partials._recordCreateUpdateRow',['index'=>$i,'contacttypes'=>$contacttypes,'coaCategory'=>$coaCategory])
+                @endfor
+             
             </tbody>
             <tfoot>
                 <tr>
@@ -302,7 +141,7 @@
                     let contacttypeId = $(this).val();
                     let usersDropdown = $(this).closest('tr').find('.users');
                     $.ajax({
-                        url: `/transactions/ajaxUsers/${contacttypeId}`,
+                        url: `/users/ajaxUsers/${contacttypeId}`,
                         type: 'GET',
                         success: function(response) {
                             usersDropdown.empty();

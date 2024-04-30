@@ -13,7 +13,6 @@ class RoleController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
         $this->middleware('permission:create-role|edit-role|delete-role|view-role',['only'=>['index','show']]);
         $this->middleware('permission:create-role',['only'=>['store','create']]);
         $this->middleware('permission:edit-role',['only'=>['edit','update']]);
@@ -51,7 +50,6 @@ class RoleController extends Controller
 
             $role = Role::create(['name' => $validatedData['name']]);
             $permissions = DB::table('permissions')->whereIn('id', $validatedData['permissions'])->pluck('name');
-            // dd($permissions);
             $role->syncPermissions($permissions);
         });
         return redirect()->route('roles.index')->withSuccess('New role added successfully');
@@ -141,7 +139,7 @@ class RoleController extends Controller
         $user = User::find($validatedData['user_id']);
         $selectedRoleNames = DB::table('roles')->whereIn('id',$validatedData['roles'])->pluck('name');
         $user->syncRoles($selectedRoleNames);
-        return redirect()->route('role.assign')->withSuccess("Roles assigned");
+        return redirect()->route('roles.assign')->withSuccess("Roles assigned");
     }
 
 }

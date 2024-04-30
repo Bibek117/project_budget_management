@@ -19,7 +19,6 @@ class TransactionController extends Controller
 
     public function __construct(TransactionRepository $transactionRepo){
         $this->transactionRepo = $transactionRepo;
-        $this->middleware('auth');
         $this->middleware('permission:create-transaction|edit-transaction|delete-transaction|view-transaction',['only'=>['show','index']]);
         $this->middleware('permission:create-transaction',['only'=>['store','create']]);
         $this->middleware('permission:edit-transaction',['only'=>['update','edit']]);
@@ -43,12 +42,10 @@ class TransactionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        // $test = Contacttype::all();
-        // dd($test[0]->contact[0]->user);
-        return view('transactions.create', ['projects' => Project::all(),'contacttypes'=>Contacttype::all()]);
-    }
+    // public function create()
+    // {
+    //     return view('transactions.create', ['projects' => Project::all(),'contacttypes'=>Contacttype::all()]);
+    // }
 
  
 
@@ -101,12 +98,5 @@ class TransactionController extends Controller
         }
     }
 
-
-    //get users given contact type
-    public function getUsersAjax(string $id)
-    {
-        $result = DB::select('select users.id,users.username from users inner join contacts on users.id = contacts.user_id where contacts.contacttype_id = ?', [$id]);
-        return response()->json(['users' => $result]);
-    }
 
 }

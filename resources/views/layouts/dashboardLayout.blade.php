@@ -14,7 +14,9 @@
      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
      <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.dataTables.css" />
 
-
+     {{-- multiple select --}}
+     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+   
 
 
      {{-- fonts --}}
@@ -37,15 +39,15 @@
              width: 60px;
          }
 
-         select[multiple] {
-             height: 300px;
+         /* select[multiple] {
+             height: 200px;
          }
 
          select[multiple] option:checked {
              background-color: #d6f7e1;
              border-color: #48bb78;
-             padding:2px;
-         }
+             padding: 2px;
+         } */
      </style>
 
  </head>
@@ -79,7 +81,7 @@
                              <span class="text-sm">Settings</span>
                          </a>
                          <div class="dropdown-divider"></div>
-                         <a class="dropdown-item" href="{{ route('logout') }}">
+                         <a class="dropdown-item" href="{{ route('user.logout') }}">
                              <i class="bi bi-box-arrow-right mr-2 text-gray-400"></i>
                              <span class="text-sm">Logout</span>
                          </a>
@@ -163,7 +165,7 @@
 
                      {{-- TODO  --}}
                      <li>
-                         <a href=""
+                         <a href="{{ route('report.index') }}"
                              class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group {{ request()->routeIs('report.*') ? 'active' : '' }}">
                              <i class="bi bi-file-earmark-bar-graph"></i>
                              <span class="flex-1 ms-3 whitespace-nowrap">Report</span>
@@ -197,6 +199,8 @@
 
      {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
      <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
+
+       <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
      @stack('other-scripts')
  </body>
 

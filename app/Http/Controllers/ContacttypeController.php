@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreContacttypeRequest;
 use App\Models\Contact;
 use App\Models\Contacttype;
 use Illuminate\Http\Request;
@@ -14,7 +15,6 @@ class ContacttypeController extends Controller
     public function __construct(ContacttypeRepository $contacttypeRepo)
     {
         $this->contacttypeRepo = $contacttypeRepo;
-        $this->middleware('auth');
         $this->middleware('permission:create-contacttype|edit-contacttype|delete-contacttype|view-contacttype', ['only' => ['show', 'index']]);
         $this->middleware('permission:create-contacttype', ['only' => ['store', 'create']]);
         $this->middleware('permission:edit-contacttype', ['only' => ['update', 'edit']]);
@@ -48,21 +48,9 @@ class ContacttypeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreContacttypeRequest $request)
     {
-        $validatedReq = $request->validate([
-            'contacttypes' => 'required|array',
-            'contacttypes.*.name' => 'required|string'
-        ]);
-        $contactData = [];
-        foreach ($validatedReq['contacttypes'] as $contacttype) {
-            $contactData[] = ['name' => $contacttype['name']];
-        }
-        if (count($contactData) == 1) {
-            Contacttype::create($contactData[0]);
-        } else {
-            Contacttype::insert($contactData);
-        }
+        $this->contacttypeRepo->create($request->toArray());
         return redirect()->route('contacttype.index')->withSuccess("Contact Type created successfully");
     }
 

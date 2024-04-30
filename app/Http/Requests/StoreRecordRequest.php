@@ -29,7 +29,7 @@ class StoreRecordRequest extends FormRequest
             'transactions.*.contact_id'=>'required',
             'transactions.*.desc' => 'required|string',
             'transactions.*.amount' => 'required|numeric',
-            'transactions.*.COA' => 'required'
+            'transactions.*.coa_id' => 'required'
         ];
     }
 

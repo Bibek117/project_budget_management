@@ -6,12 +6,14 @@ use App\Models\Record;
 use App\Models\Timeline;
 use App\Models\Contacttype;
 use App\Models\Transaction;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Repostories\RecordRepository;
 use App\Http\Requests\StoreRecordRequest;
 use App\Http\Requests\UpdateRecordRequest;
+use App\Models\AccountCategory;
 
 class RecordController extends Controller
 {
@@ -19,6 +21,10 @@ class RecordController extends Controller
    
     public function __construct(RecordRepository $recordRepository){
         $this->recordRepo = $recordRepository;
+        $this->middleware('permission:view-record|create-record|delete-record|edit-record',['only'=>['index','show']]);
+        $this->middleware('permission:create-record',['only'=>['create','store']]);
+        $this->middleware('permission:edit-record',['only'=>['edit','update']]);
+        $this->middleware('permission:delete-record',['only'=>['destroy']]);
     }
 
 
@@ -28,7 +34,10 @@ class RecordController extends Controller
        return view('transactions.index',['records'=>$result]);
     }
 
-
+    public function create(){
+        // dd(AccountCategory::all());
+        return view('transactions.create',['projects' => Project::all(),'contacttypes'=>Contacttype::all(),'coaCategory'=>AccountCategory::all()]);
+    }
     //show single record i.e has multiple transactions
 
     public function show($id){

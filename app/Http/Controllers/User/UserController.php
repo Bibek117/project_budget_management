@@ -29,7 +29,7 @@ class UserController extends Controller
     //get all users
     public function index()
     {
-        $res = User::paginate(3);
+        $res = $this->userRepo->getAll();
         return view('users.index', ['users' => $res]);
     }
 
@@ -222,6 +222,14 @@ class UserController extends Controller
                  ->delete();
 
         // return redirect()->route('user.index')->withSuccess("Contact Types assigned successfully");
+    }
+
+
+    //get users given contact type
+    public function getUsersAjax(string $id)
+    {
+        $result = DB::select('select users.id,users.username from users inner join contacts on users.id = contacts.user_id where contacts.contacttype_id = ?', [$id]);
+        return response()->json(['users' => $result]);
     }
 }
 

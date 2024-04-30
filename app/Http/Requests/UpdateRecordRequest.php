@@ -28,7 +28,7 @@ class UpdateRecordRequest extends FormRequest
             'transactions' => 'required|array',
             'transactions.*.desc' => 'required|string',
             'transactions.*.amount' => 'required|numeric',
-            'transactions.*.COA' => 'required'
+            'transactions.*.coa_id' => 'required'
         ];
      
     }

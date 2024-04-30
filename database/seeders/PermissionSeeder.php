@@ -58,8 +58,14 @@ class PermissionSeeder extends Seeder
             'create-budget',
             'edit-budget',
             'delete-budget',
-            'view-budget'
+            'view-budget',
 
+
+            //record related permission
+            'view-record',
+            'create-record',
+            'edit-record',
+            'delete-record',
     
             
         ];

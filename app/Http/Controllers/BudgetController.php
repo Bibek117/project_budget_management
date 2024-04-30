@@ -14,7 +14,6 @@ class BudgetController extends Controller
     public function __construct(BudgetRepository $budgetRepo)
     {
         $this->budgetRepo = $budgetRepo;
-        $this->middleware('auth');
         $this->middleware('permission:create-budget|edit-budget|delete_budget|view-budget', ['only' => ['index', 'show']]);
         $this->middleware('permission:create-budget', ['only' => ['store', 'createBudget']]);
         $this->middleware('permission:edit-budget', ['only' => ['edit', 'update']]);
@@ -35,7 +34,7 @@ class BudgetController extends Controller
     }
 
     //budget create form
-    public function createBudget()
+    public function create()
     {
 
         return view('projects.timelines.budgets.create', ['projects' => Project::all()]);

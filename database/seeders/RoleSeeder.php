@@ -77,11 +77,17 @@ class RoleSeeder extends Seeder
             'assign-project-to-user',
             'assign-contact',
 
-            //records related permissions
+            //transactions related permissions
             'view-transaction',
             'create-transaction',
             'edit-transaction',
             'delete-transaction',
+
+            //record related permission
+            'view-record',
+            'create-record',
+            'edit-record',
+            'delete-record',
 
             //timeline related permissions
             'view-timeline',

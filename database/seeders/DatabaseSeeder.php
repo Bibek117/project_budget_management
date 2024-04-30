@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             ProjectSeeder::class,
-            ContacttypeSeeder::class
+            ContacttypeSeeder::class,
+            ChartOfAccountSeeder::class
         ]);
     }
 }

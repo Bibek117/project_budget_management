@@ -26,7 +26,7 @@ class RecordRepository extends CommonInterfaceRepository
                     'record_id' => $recordId,
                     'contact_id' => $transaction['contact_id'],
                     'budget_id' => $transaction['budget_id'] ?? null,
-                    'COA' => $transaction['COA'],
+                    'coa_id' => $transaction['coa_id'],
                     'amount' => $transaction['amount'],
                     'desc' => $transaction['desc']
                 ]

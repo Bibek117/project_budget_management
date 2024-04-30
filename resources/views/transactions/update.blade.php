@@ -4,17 +4,6 @@
         <div class="card-header">
             <h5>Edit Record</h5>
         </div>
-
-        
-    {{-- @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif --}}
         <div class="card-body">
             <form action="{{ route('record.update', $record->id) }}" method="post" id="update_form">
                 @csrf
@@ -51,9 +40,6 @@
 
                         <div class="ml-4 form-group" id="exe_date">
                             <label for="execution_date">Transactions performed date</label><br>
-                            {{-- @php
-                                dd($record->execution_date)
-                            @endphp --}}
                             <input type="date" class="form-control @error('execution_date') is-invalid @enderror"
                                 value="{{ old('execution_date', $record->execution_date) }}"
                                 min="{{ $selectedTimeline->start_date }}" max="{{ $selectedTimeline->end_date }}"

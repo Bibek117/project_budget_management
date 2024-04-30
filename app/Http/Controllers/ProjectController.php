@@ -18,7 +18,6 @@ class ProjectController extends Controller
     public function __construct(ProjectRepository $projectRepo)
     {
         $this->projectRepo = $projectRepo;
-        $this->middleware('auth');
         $this->middleware('permission:view-project',['only'=>['show']]);
         $this->middleware('permission:create-project|edit-project|delete-project', ['only' => ['index']]);
         $this->middleware('permission:create-project', ['only' => ['store', 'createProject']]);
@@ -105,7 +104,7 @@ class ProjectController extends Controller
 
 
     //create new project form
-    public function createProject()
+    public function create()
     {
         return view('projects.create');
     }
