@@ -26,13 +26,14 @@ class ContacttypeController extends Controller
     public function index(Request $request)
     {
         $limit = 3;
-        $offset = $request->query('offset') ?? null;
-        if ($offset === null) {
+        $offset = $request->query('offset') ?? 0;
+        $result = DB::select('SELECT * FROM contacttypes LIMIT ? OFFSET ?', [$limit, $offset]);
+        if ($offset === 0) {
             $totalRecords = Contacttype::count();
-            $result = DB::select('SELECT * FROM contacttypes LIMIT ? ', [$limit]);
+            // $result = DB::select('SELECT * FROM contacttypes LIMIT ? ', [$limit]);
             return view('contacts.index', ['totalContacttypes' => $totalRecords, 'contacttypes' => $result]);
         } else {
-            $result = DB::select('SELECT * FROM contacttypes LIMIT ? OFFSET ?', [$limit, $offset]);
+            // $result = DB::select('SELECT * FROM contacttypes LIMIT ? OFFSET ?', [$limit, $offset]);
             return response()->json(['contacttypes'=>$result]);
         }
     }

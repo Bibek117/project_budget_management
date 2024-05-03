@@ -52,23 +52,7 @@ class BudgetController extends Controller
      */
     public function store(StoreBudgetRequest $request)
     {
-        // dd($request);
-        // $timeline_id = $request->timeline_id;
-        // $budgetsData = [];
 
-        // foreach ($request->budgets as $budget) {
-        //     $budgetsData[] = [
-        //         'timeline_id' => $timeline_id,
-        //         'name' => $budget['name'],
-        //         'amount' => $budget['amount'],
-        //     ];
-        // }
-
-        // if (count($budgetsData) == 1) {
-        //     Budget::create($budgetsData[0]);
-        // } else {
-        //     Budget::insert($budgetsData);
-        // }
         $this->budgetRepo->create($request->toArray());
         if($request->ajax()){
             return response()->json(['message'=>'Budgtes created successfully','success'=>true]);

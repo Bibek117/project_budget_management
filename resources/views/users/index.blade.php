@@ -1,13 +1,17 @@
 @extends('layouts.dashboardLayout')
 @section('content')
-    <h3 class="text-center">User details</h3>
+    <div class="text-center text-black  p-3 mb-2">
+        <h3 class="text-capitalize">Users</h3>
+    </div>
+    {{ Breadcrumbs::render('user.index') }}
+
     @can('register-user')
         <button class="btn btn-primary mb-3"><a class="text-white" href="{{ route('user.create') }}">Create new User</a></button>
     @endcan
     @if (session('success'))
         <p class="text-success">{{ session('success') }}</p>
-    @endif 
-        <p id="successMsg" class="text-success"></p>
+    @endif
+    <p id="successMsg" class="text-success"></p>
     <table class="table" id="userDataTable">
         <thead class="thead-light">
             <tr>
@@ -77,17 +81,17 @@
                         <div class="form-group">
                             <label for="email">Email address</label>
                             <input type="email" class="form-control" name="email" id="email">
-                             <p class="text-danger text-sm" id="error_email"></p>
+                            <p class="text-danger text-sm" id="error_email"></p>
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone Number</label>
                             <input type="tel" class="form-control" id="phone" name="phone">
-                             <p class="text-danger text-sm" id="error_phone"></p>
+                            <p class="text-danger text-sm" id="error_phone"></p>
                         </div>
                         @can('assign-project-to-user')
-                            <div class="form-group">
+                            <div class="form-group ">
                                 <label for="assignProject">Select projects to assign to user</label>
-                                <select class="form-control" name="project_id[]" multiple id="assignProject">
+                                <select class="form-control select2" name="project_id[]" multiple id="assignProject">
                                 </select>
                             </div>
                         @endcan
@@ -117,7 +121,7 @@
 
             $('#userDataTable').DataTable();
 
-            
+
             $('.userEdit').click(function() {
                 var userId = $(this).data('id');
                 $.ajax({
@@ -160,38 +164,38 @@
                 })
             });
 
-               $('#userModalSubmit').click(function() {
-            
-                            let editForm = $('#editForm');
-                            let userId = $('#user_id').val();
-                            $.ajax({
-                                url: `/user/${userId}`,
-                                type: "POST",
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                data: editForm.serialize(),
-                                success : function(response){
-                                    //console.log(response)
-                                    $('#successMsg').html(response.message);
-                                    $('#userEditModal').modal('hide');
+            $('#userModalSubmit').click(function() {
 
-                                },
-                                error : function(xhr,status,error){
-                                    console.log(xhr)
-                                    if(xhr.responseJSON.errors?.username){
-                                        console.log(xhr.responseJSON.errors.username[0])
-                                        $('#error_username').html(xhr.responseJSON.errors.username[0]);
-                                    }
-                                     if(xhr.responseJSON.errors?.email){
-                                        $('#error_email').html(xhr.responseJSON.errors.username[0]);
-                                    }
-                                     if(xhr.responseJSON.errors?.phone){
-                                        $('#error_phone').html(xhr.responseJSON.errors.phone[0]);
-                                    }
-                                }
-                            })
-                        })
+                let editForm = $('#editForm');
+                let userId = $('#user_id').val();
+                $.ajax({
+                    url: `/user/${userId}`,
+                    type: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: editForm.serialize(),
+                    success: function(response) {
+                        //console.log(response)
+                        $('#successMsg').html(response.message);
+                        $('#userEditModal').modal('hide');
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr)
+                        if (xhr.responseJSON.errors?.username) {
+                            console.log(xhr.responseJSON.errors.username[0])
+                            $('#error_username').html(xhr.responseJSON.errors.username[0]);
+                        }
+                        if (xhr.responseJSON.errors?.email) {
+                            $('#error_email').html(xhr.responseJSON.errors.username[0]);
+                        }
+                        if (xhr.responseJSON.errors?.phone) {
+                            $('#error_phone').html(xhr.responseJSON.errors.phone[0]);
+                        }
+                    }
+                })
+            })
 
             $('#userEditModal').on('shown.bs.modal', function() {
                 $('#username').trigger('focus');

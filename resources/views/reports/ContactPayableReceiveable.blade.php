@@ -25,10 +25,11 @@
                 <div class="form-group">
                     <select name="chartOfAccount" id="coa">
                         <option value="" selected disabled>Chart of Account</option>
-                        <option value="receive">Receivable</option>
-                        <option value="payable">Payable</option>
-                        <option value="bc">Bank/Cash</option>
-                        <option value="expense">Expense</option>
+                       @forelse ($coaCategory  as $eachCategory)
+                           <option value="{{$eachCategory->id}}">{{$eachCategory->name}}</option>
+                       @empty
+                           <option value="" disabled selected>No chart of accounts</option>
+                       @endforelse
                     </select>
                 </div>
                 <button class="btn btn-info" id="generate-report">Generate</button>

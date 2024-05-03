@@ -1,6 +1,7 @@
 @extends('layouts.dashboardLayout')
 @section('content')
  <h3 class="text-center">Register new user</h3>
+ {{Breadcrumbs::render('user.create')}}
  @if ($errors->any())
      <div class="alert alert-danger">
         <ul>
@@ -34,5 +35,6 @@
   <input type="tel" class="form-control" id="phone" name="phone" value="{{old('phone')}}"placeholder="Enter contact number" >
 </div>
   <button type="submit" class="btn btn-primary">Register User</button>
+  @include('partials.goback')
 </form>
 @endsection

@@ -21,11 +21,12 @@ class UpdateRecordRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->route('record'); 
     return [
             'timeline_id'=>'required',
             'execution_date' => 'required|date',
-            'code'=>'required|unique:records,code,'.$this->id,
-            'transactions' => 'required|array',
+            'code'=>'required|unique:records,code,'.$id,
+            'transactions' => 'required|array|min:2',
             'transactions.*.desc' => 'required|string',
             'transactions.*.amount' => 'required|numeric',
             'transactions.*.coa_id' => 'required'

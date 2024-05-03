@@ -1,7 +1,9 @@
 @extends('layouts.dashboardLayout')
 @section('content')
-    <h3 class="text-center">Create record</h3>
-
+    <div class="p-3">
+        <h3 class="text-center">Create record</h3>
+    </div>
+    {{Breadcrumbs::render('record.create')}}
    <div class="card">
     <div class="card-body">
         <div id="success-msg"></div>
@@ -170,32 +172,14 @@
                     let transactionHtml = `<tr id="transaction_${index}">
                           <td>
                         <div class="form-group">
-                            <select name="transactions[${index}][COA]" id="coa_${index}">
-                                <optgroup label="Receivables">
-                                    <option value="receive-grant">Grants and Funding</option>
-                                    <option value="receive-donation">Donations and Contributions</option>
-                                    <option value="receive-pledge">Pledges and Commitments</option>
-                                    <option value="receive-membership">Membership and Subscriptions</option>
-                                    <option value="receive-program">Program Fees and Sales</option>
-                                </optgroup>
-                                <optgroup label="Payables">
-                                    <option value="payable-salary">Salaries and Compensation</option>
-                                    <option value="payable-account">Accounts Payable</option>
-                                    <option value="payable-rent">Rent and Leases</option>
-                                    <option value="payable-utility">Utilities and Services</option>
-                                    <option value="payable-tax">Taxes and Duties</option>
-                                </optgroup>
-                                <optgroup label="Bank/Cash">
-                                    <option value="bc-bank">Bank Accounts</option>
-                                    <option value="bc-cash">Cash in Hand</option>
-                                </optgroup>
-                                <optgroup label="Expenses">
-                                    <option value="expense-program">Program Costs and Services</option>
-                                    <option value="expense-fundandmarket">Fundraising and Marketing</option>
-                                    <option value="expense-administrative">Administrative and Overhead</option>
-                                    <option value="expense-advocacy">Advocacy and Awareness</option>
-                                    <option value="expense-grantandproject">Grants and Projects</option>
-                                </optgroup>
+                            <select name="transactions[${index}][coa_id]" id="coa_${index}">
+                               @foreach ($coaCategory as $singleCoa)
+                                   <optgroup label="{{$singleCoa->name}}">
+                                    @foreach ($singleCoa->accountsubcat as $subcat)
+                                        <option value={{$subcat->id}}>{{$subcat->name}}</option>
+                                    @endforeach
+                                    </optgroup>
+                               @endforeach
 
                             </select>
 
@@ -307,11 +291,12 @@
                             }, 3000);
                         },
                         error: function(xhr, status, error) {
+                             console.log(xhr)
                             $.each(xhr.responseJSON.errors,function(index,error){
                                 // console.log(error[0])
                                 $('#success-msg').append('<p class="text-danger">'+error[0]+'</p>')
                             })
-                            console.log(xhr.responseJSON.errors)
+                           
                         }
                     })
                 })

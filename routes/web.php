@@ -10,6 +10,7 @@ use App\Http\Controllers\ContacttypeController;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,11 +29,9 @@ use App\Http\Controllers\TransactionController;
 Route::get('/login', [UserController::class, 'login'])->name('login');
 Route::post('/login', [UserController::class, 'authenticate'])->name('signup');
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return view('dashboard');
-    })->name('dashbaord');
-
-
+    Route::controller(DashboardController::class)->group(function(){
+        Route::get('/','getDashboard')->name('dashboard');
+    });
     //roles and permissons
     Route::controller(RoleController::class)->prefix('roles')->group(function () {
         Route::get('/edit-assigned-role/{id}', 'editAddAssignedRole')->name('roles.editAssign');
@@ -83,8 +82,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/', 'index')->name('report.index');
         Route::get('/recordDetail', 'recordDetailForm')->name('report.recordDetailCreate');
         Route::post('/recordDetail','recordDetail')->name('report.recordDetailShow');
-        // Route::get('/contactPayableReceivable','contactPayableReceivableForm')->name('report.contactPayableReceivableForm');
-        // Route::post('/contactPayableReceivable', 'contactPayableReceivable')->name('report.contactPayableReceivable');
+        Route::get('/contactPayableReceivable','contactPayableReceivableForm')->name('report.contactPayableReceivableCreate');
+        Route::post('/contactPayableReceivable', 'contactPayableReceivable')->name('report.contactPayableReceivable');
     });
     //transactions
     Route::resource('transaction',TransactionController::class)->only(['create','show','destroy']);

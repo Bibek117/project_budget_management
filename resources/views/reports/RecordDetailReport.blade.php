@@ -40,10 +40,8 @@
                 <thead class="thead-light">
                     <th>#</th>
                     <th>Record Code</th>
-                    <th>Budget Head</th>
                     <th>Contact</th>
                     <th>Chart of Account</th>
-                    <th>Amount</th>
                      <th>Debit</th>
                      <th>Credit</th>
                      <th>Balance</th>
@@ -75,6 +73,7 @@
                     },
                      data : form.serialize(),
                     success: function(response) {
+                        console.log(response.validate)
                         if(response.result.length < 1){
                              $('#detailReport').removeClass('d-none');
                              $('#tbody').append('<tr><td colspan="5">No records available</td></tr>');
@@ -84,10 +83,8 @@
                             $('#tbody').append(`<tr>
                                  <td>${index+1}</td>
                                     <td>${res.code}</td>
-                                    <td>${res.name}</td>
-                                     <td>${res.contacttype}-${res.username}</td>
-                                     <td>${res.COA}</td>
-                                     <td>${res.amount}</td>
+                                     <td>${res.Contact}</td>
+                                     <td>${res.ChartOfAcc}</td>
                                      <td>${res.debit == null?"-":res.debit  }</td>
                                      <td>${res.credit == null?"-":res.credit  }</td>
                                      <td>${res.balance}</td>

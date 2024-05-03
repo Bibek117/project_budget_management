@@ -18,21 +18,25 @@ class ProjectController extends Controller
     public function __construct(ProjectRepository $projectRepo)
     {
         $this->projectRepo = $projectRepo;
-        $this->middleware('permission:view-project',['only'=>['show']]);
+        $this->middleware('check_project',['only'=>['show','edit','update','destroy']]);
+        $this->middleware('permission:view-project', ['only' => ['show']]);
         $this->middleware('permission:create-project|edit-project|delete-project', ['only' => ['index']]);
         $this->middleware('permission:create-project', ['only' => ['store', 'createProject']]);
         $this->middleware('permission:edit-project', ['only' => ['edit', 'update']]);
         $this->middleware('permission:delete-project', ['only' => ['destroy']]);
         $this->middleware('permission:assign-user-to-project', ['only' => ['assignUserToProjectForm', 'assignUserToProject']]);
-
     }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $result = $this->projectRepo->getAll();
-        return view('projects.index', ['projects' => $result]);
+        try {
+            $result = $this->projectRepo->getAll();
+            return view('projects.index', ['projects' => $result]);
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['Error : ' . $e->getMessage()]);
+        }
     }
 
 
@@ -42,9 +46,13 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $req)
     {
-        
-        $result = $this->projectRepo->create($req->validated());
-        return redirect()->route('project.index')->withSuccess('Project created successfully');
+
+        try {
+            $result = $this->projectRepo->create($req->validated());
+            return redirect()->route('project.index')->withSuccess('Project created successfully');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['Error : ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -52,36 +60,34 @@ class ProjectController extends Controller
      */
     public function show(string $id)
     {
-      
-        $user = Auth::user();
-        if ($user->hasRole('Admin') || $user->hasRole('Super Admin')) {
-            $result = $this->projectRepo->getById($id);
-            return view('projects.show', ['project' => $result]);
+        try{
+            $project = $this->projectRepo->getById($id);
+            return view('projects.show', ['project' => $project]);
+        }catch(\Exception $e){
+            return redirect()->back()->withErrors(['Error : '.$e->getMessage()]);
         }
-
-        foreach($user->projects as $project){
-            if($project->id == $id){
-                $result = $this->projectRepo->getById($id);
-                return view('projects.show', ['project' => $result]);
-            }
-        }
-
-        return abort(403,"Unauthorized request");
-    
     }
 
     //get project for ajax
     public function getSingleAjax(string $id)
     {
-        $result = $this->projectRepo->getById($id);
-        return response()->json(['project' => $result]);
+        try {
+            $result = $this->projectRepo->getById($id);
+            return response()->json(['project' => $result]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()]);
+        }
     }
 
     //project edit form
     public function edit(String $id)
     {
-        $project = Project::find($id);
-        return view('projects.update', ['project' => $project]);
+        try {
+            $project = Project::find($id);
+            return view('projects.update', ['project' => $project]);
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['Error : ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -89,8 +95,12 @@ class ProjectController extends Controller
      */
     public function update(StoreProjectRequest $request, string $id)
     {
-        $result = $this->projectRepo->updateById($id, $request->validated());
-        return redirect()->route('project.index')->withSuccess("Projected updated successfully");
+        try {
+            $this->projectRepo->updateById($id, $request->validated());
+            return redirect()->route('project.index')->withSuccess("Projected updated successfully");
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['Error : ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -98,24 +108,37 @@ class ProjectController extends Controller
      */
     public function destroy(string $id)
     {
-        $result = $this->projectRepo->deleteById($id);
-        return redirect()->route('project.index')->withSuccess("Projected deleted successfully");
+        try {
+            $this->projectRepo->deleteById($id);
+            return redirect()->route('project.index')->withSuccess("Projected deleted successfully");
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['Error : ' . $e->getMessage()]);
+        }
     }
 
 
     //create new project form
     public function create()
     {
-        return view('projects.create');
+        try {
+            return view('projects.create');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['Error : ' . $e->getMessage()]);
+        }
     }
 
 
     //assign projects to user form
     public function assignUserToProjectForm(String $id)
     {
-        $asssignedUsers = DB::table('project_user')->where('project_id', $id)->pluck('user_id')->toArray();
-        $project = $this->projectRepo->getById($id);
-        return view('projects.assignUser', ['project' => $project, 'users' => User::without(['contact', 'record', 'projects'])->get(), 'assignedUsers' => $asssignedUsers]);
+        try {
+            $asssignedUsers = DB::table('project_user')->where('project_id', $id)->pluck('user_id')->toArray();
+            $project = $this->projectRepo->getById($id);
+            return view('projects.assignUser', ['project' => $project, 'users' => User::without(['contact', 'record', 'projects'])->get(), 'assignedUsers' => $asssignedUsers]);
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['Error : ' . $e->getMessage()]);
+        }
+        
     }
 
 
@@ -123,14 +146,17 @@ class ProjectController extends Controller
     //assign projects to user store
     public function assignUserToProject(Request $request)
     {
-        $validateReq = $request->validate([
-            'user_id' => 'required|array',
-            'project_id' => 'required'
-        ]);
-        $user = $this->projectRepo->getById($validateReq['project_id']);
-        $user->users()->sync($validateReq['user_id']);
+        try {
+            $validateReq = $request->validate([
+                'user_id' => 'required|array',
+                'project_id' => 'required'
+            ]);
+            $user = $this->projectRepo->getById($validateReq['project_id']);
+            $user->users()->sync($validateReq['user_id']);
 
-        return redirect()->route('project.index')->withSuccess("Users assigned to project successfully");
+            return redirect()->route('project.index')->withSuccess("Users assigned to project successfully");
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['Error : ' . $e->getMessage()]);
+        }
     }
-
 }

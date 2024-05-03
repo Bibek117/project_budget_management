@@ -1,5 +1,6 @@
 @extends('layouts.dashboardLayout')
 @section('content')
+   {{Breadcrumbs::render('record.show',$record)}}
     <div class="card">
         <div class="card-header">
             <h5>Record Details</h5>
@@ -38,7 +39,7 @@
 
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $transaction->COA }}</td>
+                        <td>{{ $transaction->accountsubcat->name }}</td>
                         <td>{{ $transaction->contact->user->username }}-{{ $transaction->contact->contacttype->name }}</td>
                         <td>{{ $transaction->budget->name ?? '-' }}</td>
                         <td>{{ $transaction->amount }}</td>

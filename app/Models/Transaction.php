@@ -9,7 +9,7 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['record_id','budget_id','contact_id','amount','desc','COA'];
+    protected $fillable = ['record_id','budget_id','contact_id','amount','desc','coa_id'];
 
     public function record(){
         return $this->belongsTo(Record::class,'record_id');

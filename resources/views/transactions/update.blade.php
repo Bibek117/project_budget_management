@@ -4,6 +4,7 @@
         <div class="card-header">
             <h5>Edit Record</h5>
         </div>
+        {{Breadcrumbs::render('record.edit',$record)}}
         <div class="card-body">
             <form action="{{ route('record.update', $record->id) }}" method="post" id="update_form">
                 @csrf
@@ -67,7 +68,7 @@
 
                     </div>
                 </div>
-             
+
                 <table class="table table-sm" id="edit-table">
                     <tr>
                         <th>#</th>
@@ -87,34 +88,20 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>
 
-                                <select name="transactions[{{ $loop->iteration - 1 }}][COA]">
-                                    <option value="{{ $transaction->COA }}" selected>{{ $transaction->COA }}</option>
-                                    <optgroup label="Receivables">
-                                        <option value="receive-grant" {{ $transaction->COA == 'receive-grant' ? 'selected':''}}>Grants and Funding</option>
-                                        <option value="receive-donation" {{ $transaction->COA == 'receive-donation' ? 'selected':''}}>Donations and Contributions</option>
-                                        <option value="receive-pledge" {{ $transaction->COA == 'receive-pledge' ? 'selected':''}}>Pledges and Commitments</option>
-                                        <option value="receive-membership" {{ $transaction->COA == 'receive-membership' ? 'selected':''}}>Membership and Subscriptions</option>
-                                        <option value="receive-program" {{ $transaction->COA == 'receive-program' ? 'selected':''}}>Program Fees and Sales</option>
-                                    </optgroup>
-                                    <optgroup label="Payables">
-                                        <option value="payable-salary" {{ $transaction->COA == 'payable-salary' ? 'selected':''}}>Salaries and Compensation</option>
-                                        <option value="payable-account" {{ $transaction->COA == 'payable-account' ? 'selected':''}}>Accounts Payable</option>
-                                        <option value="payable-rent" {{ $transaction->COA == 'payable-rent' ? 'selected':''}}>Rent and Leases</option>
-                                        <option value="payable-utility" {{ $transaction->COA == 'payable-utility' ? 'selected':''}}>Utilities and Services</option>
-                                        <option value="payable-tax" {{ $transaction->COA == 'payable-tax' ? 'selected':''}}>Taxes and Duties</option>
-                                    </optgroup>
-                                    <optgroup label="Bank/Cash">
-                                        <option value="bc-bank" {{ $transaction->COA == 'bc-bank' ? 'selected':''}} >Bank Accounts</option>
-                                        <option value="bc-cash" {{ $transaction->COA == 'bc-cash' ? 'selected':''}}>Cash in Hand</option>
-                                    </optgroup>
-                                    <optgroup label="Expenses">
-                                        <option value="expense-program" {{ $transaction->COA == 'expense-program' ? 'selected':''}}>Program Costs and Services</option>
-                                        <option value="expense-fundandmarket" {{ $transaction->COA == 'expense-fundandmarket' ? 'selected':''}}>Fundraising and Marketing</option>
-                                        <option value="expense-administrative" {{ $transaction->COA == 'expense-administrative' ? 'selected':''}}>Administrative and Overhead</option>
-                                        <option value="expense-advocacy" {{ $transaction->COA == 'expense-advocacy"' ? 'selected':''}}>Advocacy and Awareness</option>
-                                        <option value="expense-grantandproject" {{ $transaction->COA == 'expense-grantandproject"' ? 'selected':''}}>Grants and Projects</option>
-                                    </optgroup>
-
+                                <select name="transactions[{{ $loop->iteration - 1 }}][coa_id]">
+                                    @foreach ($coaCategory as $coacat)
+                                        {
+                                        <optgroup label="{{ $coacat->name }}">
+                                            @forelse ($coacat->accountsubcat as $subcat)
+                                                <option value="{{ $subcat->id }}"
+                                                    {{ $subcat->id == $transaction->id ? 'selected' : '' }}>
+                                                    {{ $subcat->name }}</option>
+                                            @empty
+                                                <option value="" selected disabled>No chart of accounts</option>
+                                            @endforelse
+                                        </optgroup>
+                                        }
+                                    @endforeach
                                 </select>
                             </td>
                             <td>
@@ -266,33 +253,14 @@
                             <td>${editIndex + 1}</td>
                             <td>
 
-                                <select name="transactions[${editIndex}][COA]">
-                                    <option value="" selected disabled>COA</option>
-                                    <optgroup label="Receivables">
-                                    <option value="receive-grant">Grants and Funding</option>
-                                    <option value="receive-donation">Donations and Contributions</option>
-                                    <option value="receive-pledge">Pledges and Commitments</option>
-                                    <option value="receive-membership">Membership and Subscriptions</option>
-                                    <option value="receive-program">Program Fees and Sales</option>
-                                </optgroup>
-                                <optgroup label="Payables">
-                                    <option value="payable-salary">Salaries and Compensation</option>
-                                    <option value="payable-account">Accounts Payable</option>
-                                    <option value="payable-rent">Rent and Leases</option>
-                                    <option value="payable-utility">Utilities and Services</option>
-                                    <option value="payable-tax">Taxes and Duties</option>
-                                </optgroup>
-                                <optgroup label="Bank/Cash">
-                                    <option value="bc-bank">Bank Accounts</option>
-                                    <option value="bc-cash">Cash in Hand</option>
-                                </optgroup>
-                                <optgroup label="Expenses">
-                                    <option value="expense-program">Program Costs and Services</option>
-                                    <option value="expense-fundandmarket">Fundraising and Marketing</option>
-                                    <option value="expense-administrative">Administrative and Overhead</option>
-                                    <option value="expense-advocacy">Advocacy and Awareness</option>
-                                    <option value="expense-grantandproject">Grants and Projects</option>
-                                </optgroup>
+                                <select name="transactions[${editIndex}][coa_id]">
+                                    @foreach ($coaCategory as $singleCoa)
+                                   <optgroup label="{{$singleCoa->name}}">
+                                    @foreach ($singleCoa->accountsubcat as $subcat)
+                                        <option value={{$subcat->id}}>{{$subcat->name}}</option>
+                                    @endforeach
+                                    </optgroup>
+                               @endforeach
                                 </select>
                             </td>
                             <td>
