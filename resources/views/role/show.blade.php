@@ -1,6 +1,7 @@
 @extends('layouts.dashboardLayout')
 @section('content')
     <h1 class="text-center text-blue-600 text-[30px] mb-8 font-serif">Manage Roles</h1>
+    {{Breadcrumbs::render('roles.index')}}
     @can('create-role')
         <button type="button"
             class="btn btn-primary">
@@ -14,7 +15,7 @@
         </button>
     @endcan
     @if (session('success'))
-        <p class="text-success">{{session('success')}}</p>
+        @include('partials._successToast',['message'=>session('success')])
     @endif
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 mb-4 mt-5">

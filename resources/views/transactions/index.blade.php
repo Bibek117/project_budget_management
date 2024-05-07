@@ -5,7 +5,7 @@
     </div>
     {{ Breadcrumbs::render('record.index') }}
     @if (session('success'))
-        <p>{{ session('success') }}</p>
+       @include('partials._successToast',['message'=>session('success')])
     @endif
     @can('create-record')
         <button class="btn btn-primary mb-3"><a class="text-white" href="{{ route('record.create') }}">New Record<i

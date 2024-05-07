@@ -2,6 +2,7 @@
 @section('content')
     <div class="p-9">
         <h1 class="text-center text-blue-600 text-[30px] mb-8 font-serif">Assign users to the project</h1>
+        {{Breadcrumbs::render('project.assign.user.create',$project)}}
          @if ($errors->any())
      <div class="alert alert-danger">
         <ul>

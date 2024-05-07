@@ -1,10 +1,8 @@
 @extends('layouts.dashboardLayout')
 @section('content')
-    {{-- @php
-    dd($project->timeline[0]->budget)
-@endphp --}}
+    {{Breadcrumbs::render('project.show',$project)}}
     @if (session('success'))
-        <p class="text-success">{{ session('success') }}</p>
+       @include('partials._successToast',['message'=>session('success')])
     @endif
 
     <div class="card mb-3">

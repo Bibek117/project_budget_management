@@ -4,12 +4,13 @@
     dd($projects)
 @endphp --}}
     <h3 class="text-center">Projects</h3>
+    {{Breadcrumbs::render('project.index')}}
     @can('create-project')
         <button class="btn btn-primary mb-3"><a class="text-white" href="{{ route('project.create') }}">Create a new Project <i
                 class="bi bi-plus-circle"></i></a></button>
     @endcan
     @if (session('success'))
-        <p class="text-success">{{ session('success') }}</p>
+       @include('partials._successToast',['message'=>session('success')]);
     @endif
     <table class="table" id="index_table">
         <thead class="thead-dark">
@@ -59,14 +60,14 @@
         </tbody>
     </table>
 
-    {{-- @push('other-scripts')
+    @push('other-scripts')
 
     <script>
         $(document).ready(function(){
             $('#index_table').DataTable();
         })
     </script>
-    @endpush --}}
+    @endpush
     {{-- {{$users->links()}} --}}
 @endsection
 

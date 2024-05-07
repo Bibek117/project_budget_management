@@ -1,9 +1,10 @@
 @extends('layouts.dashboardLayout')
 @section('content')
     <h3 class="text-center">Contact Types</h3>
+    {{Breadcrumbs::render('contacttype.index')}}
     <button class="btn btn-primary mb-3"><a class="text-white" href="{{ route('contacttype.create') }}">Create</a></button>
     @if (session('success'))
-        <p class="text-success">{{ session('success') }}</p>
+        @include('partials._successToast',['message'=>session('success')])
     @endif
     @php
         $allContactTypesCount = $totalContacttypes;
@@ -70,10 +71,10 @@
                     <td> ${contacttype.name}</td>
                     <td class="d-flex">
                         @can('edit-contacttype')
-                                <a class="btn btn-success" href="/contacttypes/${contacttype.id}/edit" class="font-medium text-blue-600  hover:underline">Edit</a>
+                                <a class="btn btn-success" href="/contacttype/${contacttype.id}/edit" class="font-medium text-blue-600  hover:underline">Edit</a>
                         @endcan
                         @can('delete-contacttype')
-                            <form action="/contacttypes/${contacttype.id}" method="post">
+                            <form action="/contacttype/${contacttype.id}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger" type="submit"

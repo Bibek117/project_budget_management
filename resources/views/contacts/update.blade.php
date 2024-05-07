@@ -1,7 +1,7 @@
 @extends('layouts.dashboardLayout')
 @section('content')
     <h3 class="text-center">Update Contact type</h3>
-
+    {{Breadcrumbs::render('contacttype.edit',$contacttype)}}
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>

@@ -2,6 +2,7 @@
 @section('content') 
  <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
      <h1 class="text-center text-blue-600 text-[30px] mb-8 font-serif">Assign a role</h1>
+     {{Breadcrumbs::render('role.assign')}}
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 mb-4 mt-5">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
@@ -42,9 +43,6 @@
                 @endforeach
             </tbody>
         </table>
-        <div class="p-7">
-            {{-- {{ $roles->links() }} --}}
-        </div>
-
+        @include('partials.goback')
     </div>
 @endsection

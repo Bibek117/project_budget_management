@@ -55,7 +55,7 @@
  <!-- ... --->
 
  <body>
-     <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 ">
+     <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200">
          <div class="px-3 py-2 lg:px-5 lg:pl-3">
              <div class="flex items-center justify-between">
                  <div class="flex items-center justify-content-around rtl:justify-end">
@@ -93,43 +93,52 @@
      </nav>
 
      <aside id="logo-sidebar"
-         class="fixed top-0 left-0 z-40 w-63 border h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0"
+         class="fixed top-0 left-0 z-40 w-63 border h-screen pt-20 transition-transform translate-x-full bg-white border-r border-gray-200 sm:translate-x-0"
          aria-label="Sidebar">
          <div class="h-full px-3 pb-4 overflow-y-auto bg-white">
              <ul class="space-y-2 font-medium">
-                 <li">
+                 <li>
                      <a href={{ route('dashboard') }}
                          class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:bg-green-100 hover:no-underline hover:text-green-500 hover:scale-110  group {{ request()->routeIs('dashboard') ? 'activeSection' : '' }}">
                          <i class="bi bi-speedometer"></i>
                          <span class="flex-1 ms-3 whitespace-nowrap">Dashboard</span>
                      </a>
+                 </li>
+                 @if (auth()->user()->can('view-user') || auth()->user()->can('register-user'))
+                     <li>
+                         <a href={{ route('user.index') }}
+                             class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group  {{ request()->routeIs('user.*') ? 'activeSection' : '' }}">
+                             <i class="bi bi-person-circle"></i>
+                             <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
+                         </a>
                      </li>
-                     @if (auth()->user()->can('view-user') || auth()->user()->can('register-user'))
-                         <li>
-                             <a href={{ route('user.index') }}
-                                 class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg  duration-500  hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group  {{ request()->routeIs('user.*') ? 'activeSection' : '' }}">
-                                 <i class="bi bi-person-circle"></i>
-                                 <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
-                             </a>
-                         </li>
-                     @endif
-                     @if (auth()->user()->can('create-project'))
-                         <li>
-                             <a href="{{ route('project.index') }}"
-                                 class="flex text-[14px] items-center p-2  text-gray-900 transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 rounded-lg {{ request()->routeIs('project.*') ? 'activeSection' : '' }} ">
-                                 <i class="bi bi-folder-fill"></i>
-                                 <span class="flex-1 ms-3 whitespace-nowrap">Projects</span>
-                             </a>
-                         </li>
-                     @endif
-
-                     {{-- @yield('budget_timeline_create') --}}
+                 @endif
+                 @if (auth()->user()->can('create-project'))
+                     {{-- <div class="accordion" id="accprdinProject"> --}}
+                     {{-- <li>
+                    <a
+                        class="flex text-[14px] items-center p-2 text-gray-900 transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 rounded-lg " data-toggle="collapse" data-target="#collapseProject" aria-expanded="true" aria-controls="collapseProject"
+                       >
+                        <i class="bi bi-folder-fill"></i>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Projects</span>
+                    </a>
+                </li> --}}
+                     {{-- </div> --}}
+                     {{-- <div id="collapseProject" class="collapse show"> --}}
+                     <li>
+                         <a href="{{ route('project.index') }}"
+                             class="flex text-[14px] items-center p-2 text-gray-900 transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 rounded-lg {{ request()->routeIs('project.*') ? 'activeSection' : '' }} ">
+                             <i class="bi bi-folder-fill"></i>
+                             <span class="flex-1 ms-3 whitespace-nowrap">Projects</span>
+                         </a>
+                     </li>
                      @can('create-timeline')
                          <li>
                              <a href={{ route('timeline.create') }}
                                  class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group {{ request()->routeIs('timeline.*') ? 'activeSection' : '' }}">
                                  <i class="bi bi-calendar2-week"></i>
-                                 <span class="flex-1 ms-3 whitespace-nowrap font-weight-lighter">Create Timeline</span>
+                                 <span class="flex-1 ms-3 whitespace-nowrap font-weight-lighter">Create
+                                     Timeline</span>
                              </a>
                          </li>
                      @endcan
@@ -142,46 +151,45 @@
                              </a>
                          </li>
                      @endcan
-
-                     @if (auth()->user()->can('create-role') || auth()->user()->can('view-role'))
-                         <li>
-                             <a href={{ route('roles.index') }}
-                                 class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group {{ request()->routeIs('roles.*') ? 'activeSection' : '' }}">
-                                 <i class="bi bi-person-fill-gear"></i>
-                                 <span class="flex-1 ms-3 whitespace-nowrap">Roles</span>
-                             </a>
-                         </li>
-                     @endif
-                     @can('create-contacttype')
-                         <li>
-                             <a href={{ route('contacttype.index') }}
-                                 class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group {{ request()->routeIs('contacttype.*') ? 'activeSection' : '' }}">
-                                 <i class="bi bi-person-lines-fill"></i>
-                                 <span class="flex-1 ms-3 whitespace-nowrap">Contact Types</span>
-                             </a>
-                         </li>
-                     @endcan
-
-
-
-                     {{-- TODO  --}}
+                     {{-- </div> --}}
+                 @endif
+                 @if (auth()->user()->can('create-role') || auth()->user()->can('view-role'))
                      <li>
-                         <a href="{{ route('report.index') }}"
-                             class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group {{ request()->routeIs('report.*') ? 'activeSection' : '' }}">
-                             <i class="bi bi-file-earmark-bar-graph"></i>
-                             <span class="flex-1 ms-3 whitespace-nowrap">Report</span>
+                         <a href={{ route('roles.index') }}
+                             class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group {{ request()->routeIs('roles.*') ? 'activeSection' : '' }}">
+                             <i class="bi bi-person-fill-gear"></i>
+                             <span class="flex-1 ms-3 whitespace-nowrap">Roles</span>
                          </a>
                      </li>
+                 @endif
+                 @can('create-contacttype')
+                     <li>
+                         <a href={{ route('contacttype.index') }}
+                             class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group {{ request()->routeIs('contacttype.*') ? 'activeSection' : '' }}">
+                             <i class="bi bi-person-lines-fill"></i>
+                             <span class="flex-1 ms-3 whitespace-nowrap">Contact Types</span>
+                         </a>
+                     </li>
+                 @endcan
 
-                     @if (auth()->user()->can('view-transaction') || auth()->user()->can('create-transaction'))
-                         <li>
-                             <a href="{{ route('record.index') }}"
-                                 class="flex text-[14px]  items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group {{ request()->routeIs('record.*') ? 'activeSection' : '' }}">
-                                 <i class="bi bi-receipt-cutoff"></i>
-                                 <span class="flex-1 ms-3 whitespace-nowrap">Records</span>
-                             </a>
-                         </li>
-                     @endif
+                 {{-- TODO  --}}
+                 <li>
+                     <a href="{{ route('report.index') }}"
+                         class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group {{ request()->routeIs('report.*') ? 'activeSection' : '' }}">
+                         <i class="bi bi-file-earmark-bar-graph"></i>
+                         <span class="flex-1 ms-3 whitespace-nowrap">Report</span>
+                     </a>
+                 </li>
+
+                 @if (auth()->user()->can('view-transaction') || auth()->user()->can('create-transaction'))
+                     <li>
+                         <a href="{{ route('record.index') }}"
+                             class="flex text-[14px] items-center p-2 text-gray-900 rounded-lg transform transition duration-500 hover:scale-110 hover:bg-green-100 hover:no-underline hover:text-green-500 group {{ request()->routeIs('record.*') ? 'activeSection' : '' }}">
+                             <i class="bi bi-receipt-cutoff"></i>
+                             <span class="flex-1 ms-3 whitespace-nowrap">Records</span>
+                         </a>
+                     </li>
+                 @endif
              </ul>
          </div>
      </aside>
@@ -189,6 +197,7 @@
      <div class="pt-4 mt-[65px] ml-[190px] mr-2">
          @yield('content')
      </div>
+
      {{-- bootstrap --}}
      <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
@@ -203,6 +212,11 @@
 
      <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
      @stack('other-scripts')
+       <script>
+         $(document).ready(function() {
+             $('.toast').toast('show');
+         })
+     </script>
  </body>
 
  </html>

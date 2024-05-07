@@ -71,7 +71,7 @@ class ContacttypeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(String $id)
+    public function edit($id)
     {
         $contacttype = Contacttype::find($id);
         return view('contacts.update', ['contacttype' => $contacttype]);

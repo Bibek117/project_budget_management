@@ -1,5 +1,6 @@
 @extends('layouts.dashboardLayout')
 @section('content')
+    {{Breadcrumbs::render('roles.create')}}
     <div class="p-9">
         <h1 class="text-center text-blue-600 text-[30px] mb-8 font-serif">Create new Role</h1>
         <form action="{{ route('roles.store') }}" method="post">
@@ -33,7 +34,7 @@
             <script>
                 $(document).ready(function() {
                     $('#permission_select').select2({
-                        closeOnSelect : false
+                        closeOnSelect: false
                     });
                 });
             </script>

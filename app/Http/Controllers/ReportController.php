@@ -14,6 +14,11 @@ class ReportController extends Controller
         return view('reports.index');
     }
 
+    //aging report
+    public function ageingReportForm(){
+        return view('reports.ageingReport');
+    }
+
     public function recordDetailForm()
     {
         return view('reports.RecordDetailReport', ['contacttypes' => Contacttype::all(), 'coaCategory' => AccountCategory::all()]);

@@ -4,7 +4,7 @@
         dd($projects->timeline[0]->contacts);
     @endphp --}}
     <h3 class="text-center">Create contact type</h3>
-
+    {{Breadcrumbs::render('contacttype.create')}}
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>

@@ -1,6 +1,7 @@
 @extends('layouts.dashboardLayout')
 @section('content')
  <h3 class="text-center">Create new Project</h3>
+ {{Breadcrumbs::render('project.create')}}
  @if ($errors->any())
      <div class="alert alert-danger">
         <ul>

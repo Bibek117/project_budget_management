@@ -9,7 +9,7 @@
         <button class="btn btn-primary mb-3"><a class="text-white" href="{{ route('user.create') }}">Create new User</a></button>
     @endcan
     @if (session('success'))
-        <p class="text-success">{{ session('success') }}</p>
+        @include('partials._successToast',['message'=>session('success')])
     @endif
     <p id="successMsg" class="text-success"></p>
     <table class="table" id="userDataTable">

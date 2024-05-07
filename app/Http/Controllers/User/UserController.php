@@ -118,7 +118,7 @@ class UserController extends Controller
             ]);
             if (Auth::attempt($credentials)) {
                 $request->session()->regenerate();
-                return redirect()->route('dashboard');
+                return redirect()->route('dashboard')->withSuccess('Welcome back!!');
             }
             return back()->withErrors([
                 'email' => 'Credentials do not match!! Please try again'
