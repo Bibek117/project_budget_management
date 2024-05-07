@@ -105,6 +105,21 @@ Breadcrumbs::for('roles.editAssign', function (BreadcrumbTrail $trail,User $user
 });
 
 
+//reports
+Breadcrumbs::for('report.index',function (BreadcrumbTrail $trail){
+    $trail->parent('dashboard');
+    $trail->push('Reports',route('report.index'));
+});
+
+Breadcrumbs::for('report.ageingReportCreate',function(BreadcrumbTrail $trail){
+    $trail->parent('report.index');
+    $trail->push('Ageing Report',route('report.ageingReportCreate'));
+});
+
+Breadcrumbs::for('report.recordDetailCreate',function(BreadcrumbTrail $trail){
+    $trail->parent('report.index');
+    $trail->push('Balance Report',route('report.recordDetailCreate'));
+});
 
 
 

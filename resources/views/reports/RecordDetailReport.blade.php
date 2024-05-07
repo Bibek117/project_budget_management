@@ -1,5 +1,6 @@
 @extends('layouts.dashboardLayout')
 @section('content')
+{{Breadcrumbs::render('report.recordDetailCreate')}}
     <div class="card">
         <div class="card-header">
             <p>Transaction Detail Report</p>
