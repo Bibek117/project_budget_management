@@ -9,7 +9,7 @@
         <div id="success-msg"></div>
     </div>
    </div>
-    <form  id="record_form">
+    <form  id="record_form" class="mb-9">
         @csrf
         <div class="card mb-4">
             <div class="d-flex card-body">

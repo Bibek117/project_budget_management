@@ -26,28 +26,33 @@ class ReportController extends Controller
             'perDays' => 'required|numeric|min:2',
             'untilDate' => 'date',
         ]);
-        $numOfIntervals = $validatedData['interval'];
-        $daysPerInterval = $validatedData['perDays'];
-        $endDate = $validatedData['untilDate'];
-        $intervalEnd = 0;
-        $internalQuery = '';
+        try{
+            $numOfIntervals = $validatedData['interval'];
+            $daysPerInterval = $validatedData['perDays'];
+            $endDate = $validatedData['untilDate'];
+            $intervalEnd = 0;
+            $internalQuery = '';
 
             for ($i = 0; $i < $numOfIntervals; $i++) {
                 $intervalStart = $intervalEnd + 1;
                 $intervalEnd += $daysPerInterval;
-                $internalQuery .= ",SUM(IF(DATEDIFF(CURDATE(),t.created_at) BETWEEN $intervalStart AND $intervalEnd, t.amount, 0)) AS '$intervalStart-$intervalEnd days'";
+                $internalQuery .= ",SUM(IF(DATEDIFF(CURDATE(),r.execution_date) BETWEEN $intervalStart AND $intervalEnd, t.amount, 0)) AS '$intervalStart-$intervalEnd days'";
             }
 
-        $query = "SELECT sc.name AS coa, 
-                   SUM(IF(DATEDIFF(CURDATE(), t.created_at) <= 0, t.amount, 0)) AS current 
+            $query = "SELECT sc.name AS coa, 
+                   SUM(IF(DATEDIFF(CURDATE(), r.execution_date) <= 0, t.amount, 0)) AS current 
                    $internalQuery, 
-                   SUM(IF(DATEDIFF(CURDATE(), t.created_at) > $intervalEnd, t.amount, 0)) AS 'over {$intervalEnd} days',
+                   SUM(IF(DATEDIFF(CURDATE(), r.execution_date) > $intervalEnd, t.amount, 0)) AS 'over {$intervalEnd} days',
                    SUM(t.amount) AS total FROM transactions AS t 
                    INNER JOIN account_sub_categories AS sc ON sc.id = t.coa_id 
+                   INNER JOIN records AS r on t.record_id = r.id
                    WHERE t.created_at > $endDate
                    GROUP BY t.coa_id, sc.name";
-        $result = DB::select($query);
-        dd($result);
+            $result = DB::select($query);
+            return response()->json(['result'=>$result]);
+        }catch(\Exception $e){
+            return response()->json(['message'=>$e->getMessage()]);
+        }
     }
 
     public function recordDetailForm()

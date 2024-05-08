@@ -74,10 +74,10 @@
                     },
                      data : form.serialize(),
                     success: function(response) {
-                        console.log(response.validate)
                         if(response.result.length < 1){
                              $('#detailReport').removeClass('d-none');
                              $('#tbody').append('<tr><td colspan="5">No records available</td></tr>');
+                             return;
                         }
                         $.each(response.result,function(index,res){
                             $('#detailReport').removeClass('d-none');

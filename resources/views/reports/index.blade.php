@@ -9,7 +9,7 @@
             <div class="w-50">
                 <ul class="list-group text-success">
                     <li class="list-group-item d-flex justify-between">
-                        <p>Record Detail Report</p><a class="text-2xl" href="{{ route('report.recordDetailCreate') }}"><i
+                        <p>Balance Report</p><a class="text-2xl" href="{{ route('report.recordDetailCreate') }}"><i
                                 class="bi bi-box-arrow-in-right text-danger"></i></a>
                     </li>
                     {{-- <li class="list-group-item  d-flex justify-between">
