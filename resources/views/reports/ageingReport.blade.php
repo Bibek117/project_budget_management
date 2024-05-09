@@ -56,7 +56,7 @@
         $(document).ready(function() {
             $('#ageingReportForm').submit(function(e) {
                 e.preventDefault();
-                let form = $(this);
+                var form = $(this);
                 $.ajax({
                     type: "POST",
                     url: "{{ route('report.ageingReport') }}",
@@ -65,6 +65,7 @@
                     },
                     data: form.serialize(),
                     success: function(response) {
+                        form.trigger('reset');
                         $('#displayThead').empty();
                         $("#displayTbody").empty();
                         $('#ageingReportDisplay').fadeOut();

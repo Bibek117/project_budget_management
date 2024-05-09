@@ -1,16 +1,17 @@
 <?php
 
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\TimelineController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\BudgetController;
-use App\Http\Controllers\ContacttypeController;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TimelineController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\User\AdminController;
+use App\Http\Controllers\ContacttypeController;
+use App\Http\Controllers\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,6 @@ use App\Http\Controllers\DashboardController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
 
 
 
@@ -95,6 +95,14 @@ Route::middleware('auth')->group(function () {
     });
     //transactions
     Route::resource('transaction',TransactionController::class)->only(['create','show','destroy']);
+
+
+
+    //Admin
+    Route::controller(AdminController::class)->prefix('admin')->group(function(){
+        Route::get('/imitate/{id}','imitateLogin')->name('admin.imitate');
+        Route::get('/imitateLogout','imitateLogout')->name('admin.imitateLogout')->withoutMiddleware('auth');
+    });
 });
 
 

@@ -2,7 +2,7 @@
     <div class="card bg-{{$color}} text-white h-100">
         <div class="card-body bg-{{$color}}">
             <h6 class="text-uppercase">{{$text}}</h6>
-            <h1 class="display-4">{{$stats}}</h1>
+            <h3>{{$stats}}</h3>
         </div>
         <div class="card-footer d-flex justify-content-end">
             <a class="text-white" href={{$route}}><i class="bi bi-box-arrow-in-right"></i></a>

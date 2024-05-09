@@ -64,30 +64,40 @@
                          <span class="self-center text-xl  sm:text-2xl whitespace-nowrap">Manage</span>
                      </a>
                  </div>
-                 <div class="nav-item dropdown no-arrow">
-                     <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button"
-                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                         Hello {{ Auth::user()->username ?? 'Unknown user' }} |
-                         <i class="bi bi-person-circle text-dark ml-2 text-[20px]"></i>
-                     </a>
-                     <!-- Dropdown - User Information -->
-                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                         aria-labelledby="userDropdown">
-                         <a class="dropdown-item" href="#">
-                             <i class="bi bi-person-circle  mr-2 text-gray-400"></i>
-                             <span class="text-sm">Profile</span>
+                 <div class="flex items-center">
+                     @if (session('is_imitating') && session('is_imitating') === true)
+                     <div class="flex  justify-between border border-3 border-primary pt-2 px-2">
+                         <p class="text-sm mr-3"><i class="bi bi-eye-fill text-success"></i> in as
+                             {{ auth()->user()->username }}</p>
+                         <a href="{{ route('admin.imitateLogout') }}" class="transform transition text-danger duration-500  hover:no-underline  hover:scale-110 "> | <i class="bi bi-box-arrow-right text-md"></i></a>
+                     </div>
+                 @endif
+                     <div class="nav-item dropdown no-arrow">
+                         <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button"
+                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                             Hello {{ Auth::user()->username ?? 'Unknown user' }} |
+                             <i class="bi bi-person-circle text-dark ml-2 text-[20px]"></i>
                          </a>
-                         <a class="dropdown-item" href="#">
-                             <i class="bi bi-gear  mr-2 text-gray-400"></i>
-                             <span class="text-sm">Settings</span>
-                         </a>
-                         <div class="dropdown-divider"></div>
-                         <a class="dropdown-item" href="{{ route('user.logout') }}">
-                             <i class="bi bi-box-arrow-right mr-2 text-gray-400"></i>
-                             <span class="text-sm">Logout</span>
-                         </a>
+                         <!-- Dropdown - User Information -->
+                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                             aria-labelledby="userDropdown">
+                             <a class="dropdown-item" href="#">
+                                 <i class="bi bi-person-circle  mr-2 text-gray-400"></i>
+                                 <span class="text-sm">Profile</span>
+                             </a>
+                             <a class="dropdown-item" href="#">
+                                 <i class="bi bi-gear  mr-2 text-gray-400"></i>
+                                 <span class="text-sm">Settings</span>
+                             </a>
+                             <div class="dropdown-divider"></div>
+                             <a class="dropdown-item" href="{{ route('user.logout') }}">
+                                 <i class="bi bi-box-arrow-right mr-2 text-gray-400"></i>
+                                 <span class="text-sm">Logout</span>
+                             </a>
+                         </div>
                      </div>
                  </div>
+
              </div>
          </div>
      </nav>
@@ -212,7 +222,7 @@
 
      <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
      @stack('other-scripts')
-       <script>
+     <script>
          $(document).ready(function() {
              $('.toast').toast('show');
          })

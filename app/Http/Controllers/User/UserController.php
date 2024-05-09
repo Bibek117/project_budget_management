@@ -30,7 +30,7 @@ class UserController extends Controller
     //get all users
     public function index()
     {
-        $res = $this->userRepo->getAll();
+        $res = DB::select('SELECT u.*,r.name FROM users AS u LEFT JOIN model_has_roles AS mr ON mr.model_id = u.id INNER JOIN roles AS r ON r.id = mr.role_id where r.name NOT IN ("Admin","Super Admin")');
         return view('users.index', ['users' => $res]);
     }
 

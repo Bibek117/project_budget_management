@@ -28,6 +28,12 @@
                     <td>{{ $user->username }}</td>
                     <td>{{ $user->email }}</td>
                     <td class="d-flex">
+                         @if(auth()->user()->hasRole('Admin'))
+                            <button class="btn btn-danger mr-2">
+                            <a href={{ route('admin.imitate', $user->id) }}
+                                class="font-medium text-light  hover:underline"><i class="bi bi-key"></i></a>
+                            </button>
+                        @endif
                         <button class="btn btn-info mr-2">
                             <a href={{ route('user.show', $user->id) }}
                                 class="font-medium text-yellow-600  hover:underline"><i
