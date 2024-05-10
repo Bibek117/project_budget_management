@@ -32,7 +32,10 @@ Route::post('/login', [UserController::class, 'authenticate'])->name('signup');
 Route::middleware('auth')->group(function () {
     Route::controller(DashboardController::class)->group(function(){
         Route::get('/','getDashboard')->name('dashboard');
+        Route::get('/payable-receivable-chart','payRecLineChart')->name('dashboard.payreceivechart');
     });
+
+    
     //roles and permissons
     Route::controller(RoleController::class)->prefix('roles')->group(function () {
         Route::get('/edit-assigned-role/{id}', 'editAddAssignedRole')->name('roles.editAssign');
