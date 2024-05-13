@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\User;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -40,10 +41,13 @@ class AdminController extends Controller
                 $request->session()->forget('is_imitating');
                 Auth::logout();
                 Auth::loginUsingId($admin_id);
+                $projects = Project::whereDate('start_date', '<=', now())
+                ->whereDate('end_date', '>=', now())
+                ->get();
                 $totalUsers = DB::select('SELECT count(id) AS count FROM users');
                 $totalProjects = DB::select('SELECT count(id) AS count FROM projects');
                 $totalTransactions = DB::select('SELECT count(*) AS count FROM transactions');
-                return view('dashboard', ['totalUsers' => $totalUsers, 'totalProjects' => $totalProjects, 'totalTransactions' => $totalTransactions]);
+                return view('dashboard', ['totalUsers' => $totalUsers, 'totalProjects' => $totalProjects, 'totalTransactions' => $totalTransactions,'activeProject' => $projects[0]]);
             }else{
                 abort(403);
             }

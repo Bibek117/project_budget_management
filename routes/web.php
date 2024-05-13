@@ -1,5 +1,8 @@
 <?php
 
+use App\Mail\ProjectAssignedMail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\BudgetController;
@@ -107,7 +110,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/imitateLogout','imitateLogout')->name('admin.imitateLogout')->withoutMiddleware('auth');
     });
 });
-
 
 
 

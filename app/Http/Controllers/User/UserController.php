@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Events\ProjectAssigned;
 use App\Models\User;
 use App\Models\Contact;
 use App\Models\Project;
@@ -80,6 +81,7 @@ class UserController extends Controller
 
                 $this->userRepo->updateById($id, $userDetails);
             });
+            event(new ProjectAssigned(User::find($id)));
 
             return response()->json(['message' => 'User details updated successfully']);
         } catch (\Exception $error) {
@@ -177,64 +179,7 @@ class UserController extends Controller
         }
     }
 
-    //assign project/s to user
-
-    // public function assignProjectToUserForm(String $id)
-    // {
-    //     $asssignedProjects = DB::table('project_user')->where('user_id', $id)->pluck('project_id')->toArray();
-    //     $user = $this->userRepo->getById($id);
-    //     return view('users.assignProject', ['user' => $user, 'projects' => Project::without(['timeline'])->get(), 'assignedProjects' => $asssignedProjects]);
-    // }
-
-
-    //assign projects to user
-    //   public function assignProjectToUser(Request $request )
-    // public function assignProjectToUser(array $request)
-    // {
-    //     $user = $this->userRepo->getById($request['user_id']);
-    //     $user->projects()->sync($request['project_id']);
-
-    //     // return redirect()->route('user.index')->withSuccess("Projects assigned to user successfully");
-    // }
-
-
-    //assign contact type to user 
-    // public function assignContactTypeToUserForm(String $id)
-    // {
-    //     $assignedContatcs = DB::table('contacts')->where('user_id', $id)->pluck('contacttype_id')->toArray();
-    //     $user = $this->userRepo->getById($id);
-    //     return view('users.assignContacttype', ['user' => $user, 'assignedContacts' => $assignedContatcs, 'contacttypes' => Contacttype::get()]);
-    // }
-
-    //assign contact type to user ->store
-    // public function assignContactTypeToUser(Request $request)
-    // public function assignContactTypeToUser(array $request)
-    // {
-    //     $assignedContatcIds = DB::table('contacts')->where('user_id', $request['user_id'])->pluck('contacttype_id')->toArray();
-
-    //     $newIdsToAssign = $request['contacttype_id'];
-
-    //     //arrar_diff returns array of difference in elements
-    //     $IDsToAttach = array_diff($newIdsToAssign, $assignedContatcIds);
-    //     $IDsToDettach = array_diff($assignedContatcIds, $newIdsToAssign);
-
-
-    //     $data = [];
-    //     foreach ($IDsToAttach as $contacttypeId) {
-    //         $data[] = [
-    //             'user_id' => $request['user_id'],
-    //             'contacttype_id' => $contacttypeId,
-    //         ];
-    //     }
-    //     Contact::insert($data);
-
-    //     Contact::where('user_id', $request['user_id'])
-    //         ->whereIn('contacttype_id', $IDsToDettach)
-    //         ->delete();
-
-    // return redirect()->route('user.index')->withSuccess("Contact Types assigned successfully");
-    // }
-
+  
 
 
 

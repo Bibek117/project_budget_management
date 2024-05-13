@@ -83,6 +83,96 @@
             </div>
 
         </div>
+
+        @push('other-scripts')
+            <script>
+                $(document).ready(function() {
+
+                    let phpData = @json($timelineData);
+                    let preparedDataForTimeline = [];
+                    phpData.forEach((arr) => {
+                        preparedDataForTimeline.push({
+                            "x": arr.name,
+                            "y": [new Date(arr.start_date).getTime(), new Date(arr.end_date).getTime()]
+                        })
+                    })
+                    var options = {
+                        series: [{
+                            data: preparedDataForTimeline
+                        }],
+                        chart: {
+                            height: 350,
+                            type: 'rangeBar'
+                        },
+                        plotOptions: {
+                            bar: {
+                                horizontal: true
+                            }
+                        },
+                        xaxis: {
+                            type: 'datetime'
+                        }
+                    };
+                    var chart = new ApexCharts(document.querySelector("#timelineChart"), options);
+                    chart.render();
+
+                    $(document).on('change', '.input-change', function() {
+                        let form = $('#payreceiveChart');
+                        if ($('#sdate').val() != '' && $('#edate').val() != '') {
+                            $.ajax({
+                                type: "GET",
+                                url: "{{ route('dashboard.payreceivechart') }}",
+                                data: form.serialize(),
+                                success: function(response) {
+                                    let res = response.result;
+                                    let labels = res.map(entry => entry.month);
+                                    let receivablesAmounts = res.map(entry => parseInt(entry
+                                        .receiveable));
+                                    let payablesAmounts = res.map(entry => parseInt(entry.payable));
+                                    let ctx = document.getElementById('myChart');
+                                    let myChart = new Chart(ctx, {
+                                        type: 'line',
+                                        data: {
+                                            labels: labels,
+                                            datasets: [{
+                                                label: 'Receivables',
+                                                data: receivablesAmounts,
+                                                borderColor: 'blue',
+                                                fill: false
+                                            }, {
+                                                label: 'Payables',
+                                                data: payablesAmounts,
+                                                borderColor: 'red',
+                                                fill: false
+                                            }]
+                                        },
+                                        options: {
+                                            title: {
+                                                display: true,
+                                                text: 'Payable Receivable chart'
+                                            },
+                                            responsive: false,
+                                            scales: {
+                                                yAxes: [{
+                                                    ticks: {
+                                                        beginAtZero: true
+                                                    }
+                                                }]
+                                            }
+                                        }
+                                    });
+                                },
+
+                                error: function(xhr, status, error) {
+                                    console.log(xhr)
+                                }
+                            })
+                        }
+
+                    })
+                })
+            </script>
+        @endpush
     @else
         <h2 class="text-center">Projects For You</h2>
         <div class="row mb-3">
@@ -102,91 +192,3 @@
         </div>
     @endif
 @endsection
-@push('other-scripts')
-    <script>
-        $(document).ready(function() {
-            let phpData = @json($timelineData);
-            let preparedDataForTimeline = [];
-            phpData.forEach((arr) => {
-                preparedDataForTimeline.push({
-                    "x": arr.name,
-                    "y": [new Date(arr.start_date).getTime(), new Date(arr.end_date).getTime()]
-                })
-            })
-            var options = {
-                series: [{
-                    data: preparedDataForTimeline
-                }],
-                chart: {
-                    height: 350,
-                    type: 'rangeBar'
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: true
-                    }
-                },
-                xaxis: {
-                    type: 'datetime'
-                }
-            };
-            var chart = new ApexCharts(document.querySelector("#timelineChart"), options);
-            chart.render();
-
-            $(document).on('change', '.input-change', function() {
-                let form = $('#payreceiveChart');
-                if ($('#sdate').val() != '' && $('#edate').val() != '') {
-                    $.ajax({
-                        type: "GET",
-                        url: "{{ route('dashboard.payreceivechart') }}",
-                        data: form.serialize(),
-                        success: function(response) {
-                            let res = response.result;
-                            let labels = res.map(entry => entry.month);
-                            let receivablesAmounts = res.map(entry => parseInt(entry
-                                .receiveable));
-                            let payablesAmounts = res.map(entry => parseInt(entry.payable));
-                            let ctx = document.getElementById('myChart');
-                            let myChart = new Chart(ctx, {
-                                type: 'line',
-                                data: {
-                                    labels: labels,
-                                    datasets: [{
-                                        label: 'Receivables',
-                                        data: receivablesAmounts,
-                                        borderColor: 'blue',
-                                        fill: false
-                                    }, {
-                                        label: 'Payables',
-                                        data: payablesAmounts,
-                                        borderColor: 'red',
-                                        fill: false
-                                    }]
-                                },
-                                options: {
-                                    title: {
-                                        display: true,
-                                        text: 'Payable Receivable chart'
-                                    },
-                                    responsive: false,
-                                    scales: {
-                                        yAxes: [{
-                                            ticks: {
-                                                beginAtZero: true
-                                            }
-                                        }]
-                                    }
-                                }
-                            });
-                        },
-
-                        error: function(xhr, status, error) {
-                            console.log(xhr)
-                        }
-                    })
-                }
-
-            })
-        })
-    </script>
-@endpush
